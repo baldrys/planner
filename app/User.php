@@ -7,6 +7,8 @@ use App\Support\DaysPicker;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\DayActivity;
+use App\UserActivity;
 
 class User extends Authenticatable
 {
@@ -39,16 +41,32 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function dayActivities()
+    public function activities()
     {
-        return $this->hasMany('App\DayActivity');
+        return $this->hasMany('App\UserActivity');
     }
 
     public function initWeek() {
         $days = DaysPicker::getDaysInWeek();
-
-        foreach ($days as $day) {
+        $userActivities = $this->activities()->get();
+        $userActivitiesInWeek = [];
+        foreach ($userActivities as $userActivity) {
+            
+            foreach ($days as $day) {
+                $dayActivity = DayActivity::where('user_activity_id', $userActivity->id)
+                                            ->where('date', $day);
+                if (!$dayActivity->exists()) {
+                    $dayActivity = DayActivity::create([
+                        'user_activity_id' => $userActivity->id,
+                        'date' => $day
+                    ]);
+                    
+                }
+                array_push($userActivitiesInWeek, $dayActivity->first());                           
+            }
         }
+        return collect($userActivitiesInWeek);
+
 
     }
 }

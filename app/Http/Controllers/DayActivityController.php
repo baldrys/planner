@@ -8,6 +8,7 @@ use App\Activity;
 use App\DayActivity;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use App\Http\Resources\DayActivity as DayActivityR;
 
 class DayActivityController extends Controller
 {
@@ -15,8 +16,12 @@ class DayActivityController extends Controller
         
         if (Auth::check()) {
             $user = Auth::user();
-            $userActivities = $user->dayActivities()->get();
+            $userActivitiesInWeek = $user->initWeek();
             
+            $u = $userActivitiesInWeek[0];
+            return DayActivityR::collection($userActivitiesInWeek);
+            dd($u);
+            // return response()->json($userActivitiesInWeek);
         }
         $activities = Activity::all();
         $date = Carbon::today();

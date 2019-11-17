@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDayActivityTable extends Migration
+class CreateUserActivitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDayActivityTable extends Migration
      */
     public function up()
     {
-        Schema::create('day_activity', function (Blueprint $table) {
+        Schema::create('user_activities', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->unsignedBigInteger('user_id')
@@ -32,9 +32,6 @@ class CreateDayActivityTable extends Migration
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
-            $table->boolean('is_done')->default(false);
-            $table->timestamp('date')->nullable();
-
             $table->timestamps();
         });
     }
@@ -46,6 +43,6 @@ class CreateDayActivityTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('day_activity');
+        //
     }
 }
