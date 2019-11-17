@@ -18,4 +18,9 @@ class UserActivity extends Model
     {
         return $this->belongsTo('App\Activity', 'activity_id');
     }
+
+    public function dayActivities()
+    {
+        return $this->hasMany('App\DayActivity', 'user_activity_id');
+    }
 }

@@ -15,4 +15,12 @@ class DayActivity extends Model
         return $this->belongsTo('App\UserActivity', 'user_activity_id');
     }
 
+    public function user() {
+        return $this->userActivity()->first()->user();
+    }
+
+    public function activity() {
+        return $this->userActivity()->first()->activity();
+    }
+
 }
