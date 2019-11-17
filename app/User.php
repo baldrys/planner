@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Carbon\Carbon;
+use App\Support\DaysPicker;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -36,4 +38,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function dayActivities()
+    {
+        return $this->hasMany('App\DayActivity');
+    }
+
+    public function initWeek() {
+        $days = DaysPicker::getDaysInWeek();
+
+        foreach ($days as $day) {
+        }
+
+    }
 }
