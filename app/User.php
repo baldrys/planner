@@ -41,30 +41,11 @@ class User extends Authenticatable
 
     public function activities()
     {
-        return $this->hasMany('App\UserActivity');
+        return $this->belongsToMany('App\Activity', 'user_activities');
     }
 
-    public function initWeek() {
-        $days = DaysPicker::getDaysInWeek();
-        $userActivities = $this->activities()->get();
-        $userActivitiesInWeek = [];
-        foreach ($userActivities as $userActivity) {
-            
-            foreach ($days as $day) {
-                $dayActivity = DayActivity::where('user_activity_id', $userActivity->id)
-                                            ->where('date', $day);
-                if (!$dayActivity->exists()) {
-                    $dayActivity = DayActivity::create([
-                        'user_activity_id' => $userActivity->id,
-                        'date' => $day
-                    ]);
-                    
-                }
-                array_push($userActivitiesInWeek, $dayActivity->first());                           
-            }
-        }
-        return collect($userActivitiesInWeek);
-
-
+    public function dayActivities()
+    {
+        return $this->hasManyThrough('App\DayActivity', 'App\UserActivity');
     }
 }
