@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginUserRequest;
 use App\Http\Requests\Auth\RegisterUserRequest;
+use App\Http\Resources\UserResource;
 
 class AuthController extends Controller
 {
@@ -35,14 +36,17 @@ class AuthController extends Controller
             return response()->json('Something went wrong on the server.', $e->getCode());
         }
     }
+    
     public function register(RegisterUserRequest $request)
     {
-        return User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        return new UserResource($user);
     }
+
     public function logout()
     {
         auth()->user()->tokens->each(function ($token, $key) {

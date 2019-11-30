@@ -26,7 +26,7 @@ Route::middleware('auth:api')->post('/logout', 'Api\AuthController@logout');
 Route::group(['prefix' => 'users'], function () {
     Route::get('/{user}', 'Api\UserController@getUser');
     Route::get('/{user}/activities', 'Api\UserActivityController@getUserActivities');
-    Route::post('/{user}/activities', 'Api\UserActivityController@addUserActivities');
+    Route::post('/{user}/activities', 'Api\UserActivityController@addUserActivity');
     // для админа
     Route::get('/{user}/day-activities', 'Api\DayActivityController@getDayActivities');
     Route::post('/{user}/set-default-day-activities', 'Api\DayActivityController@setDefaultDayActivities');

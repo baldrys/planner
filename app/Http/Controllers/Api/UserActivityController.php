@@ -8,16 +8,17 @@ use App\Activity;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\AddUserActivityRequest;
+use App\Http\Resources\ActivityResource;
 
 class UserActivityController extends Controller
 {
     public function getUserActivities(User $user) {
         $userActivities = $user->activities()->get();
-        return response()->json($userActivities);
+        return ActivityResource::collection($userActivities);
     }
 
-    public function addUserActivities(AddUserActivityRequest $request, User $user) {
+    public function addUserActivity(AddUserActivityRequest $request, User $user) {
         $newActivity = $user->activities()->create($request->all());
-        return response()->json($newActivity);
+        return new ActivityResource($newActivity);
     }
 }
