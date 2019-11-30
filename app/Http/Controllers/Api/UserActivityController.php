@@ -7,6 +7,7 @@ use App\UserActivity;
 use App\Activity;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\AddUserActivityRequest;
 
 class UserActivityController extends Controller
 {
@@ -15,8 +16,7 @@ class UserActivityController extends Controller
         return response()->json($userActivities);
     }
 
-    public function addUserActivities(Request $request, User $user) {
-        // TODO validate request
+    public function addUserActivities(AddUserActivityRequest $request, User $user) {
         $newActivity = $user->activities()->create($request->all());
         return response()->json($newActivity);
     }

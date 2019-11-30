@@ -27,11 +27,13 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('/{user}', 'Api\UserController@getUser');
     Route::get('/{user}/activities', 'Api\UserActivityController@getUserActivities');
     Route::post('/{user}/activities', 'Api\UserActivityController@addUserActivities');
-
+    // для админа
     Route::get('/{user}/day-activities', 'Api\DayActivityController@getDayActivities');
     Route::post('/{user}/set-default-day-activities', 'Api\DayActivityController@setDefaultDayActivities');
 });
 
+// перенести к в группу пользовтелей, потому что пользователь может редактировать свои группы
+// проверить что пользователь может редактировать только свои группы
 Route::group(['prefix' => 'activities'], function () {
     Route::patch('/{activity}', 'Api\ActivitiesController@editActivity');
     Route::delete('/{activity}', 'Api\ActivitiesController@deleteActivity');

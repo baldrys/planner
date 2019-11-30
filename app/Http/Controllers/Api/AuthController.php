@@ -7,10 +7,12 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginUserRequest;
+use App\Http\Requests\Auth\RegisterUserRequest;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(LoginUserRequest $request)
     {
         $http = new Client;
         try {
@@ -33,13 +35,8 @@ class AuthController extends Controller
             return response()->json('Something went wrong on the server.', $e->getCode());
         }
     }
-    public function register(Request $request)
+    public function register(RegisterUserRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
-        ]);
         return User::create([
             'name' => $request->name,
             'email' => $request->email,
