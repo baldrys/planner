@@ -37,6 +37,7 @@ class AuthController extends Controller
         }
     }
     
+    
     public function register(RegisterUserRequest $request)
     {
         $user = User::create([
