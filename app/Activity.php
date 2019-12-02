@@ -9,5 +9,8 @@ class Activity extends Model
     protected $table = 'activities';
     protected $guarded = [];
 
+    public function userActivity(){
+        return $this->hasOne('App\UserActivity');
+    }
 
 }

@@ -13,17 +13,19 @@
 
 Route::post('/login', 'Api\AuthController@login');
 Route::post('/register', 'Api\AuthController@register');
-Route::middleware('auth:api')->post('/logout', 'Api\AuthController@logout');
 
-// добавить аутентификацию и миделвер, проверку что юзер совпадает с аутентифецированным юзером
-Route::get('/users/{user}', 'Api\UserController@getUser');
-Route::get('/users/{user}/activities', 'Api\UserActivityController@getUserActivities');
-Route::post('/users/{user}/activities', 'Api\UserActivityController@addUserActivity');
-Route::patch('/users/{user}/activities/{activity}', 'Api\ActivitiesController@editActivity');
-Route::delete('/users/{user}/activities/{activity}', 'Api\ActivitiesController@deleteActivity');
-Route::get('/users/{user}/day-activities', 'Api\DayActivityController@getDayActivities');
-Route::post('/users/{user}/set-default-day-activities', 'Api\DayActivityController@setDefaultDayActivities');
-
-// перенести к в группу пользовтелей, потому что пользователь может редактировать свои группы
-// проверить что пользователь может редактировать только свои группы
-
+Route::middleware(['auth:api'])->group(function () {
+    Route::post('/logout', 'Api\AuthController@logout');
+    Route::middleware(['can:view,user'])->group(function () {
+        Route::get('/users/{user}', 'Api\UserController@getUser');
+        Route::get('/users/{user}/activities', 'Api\UserActivityController@getUserActivities');
+        Route::get('/users/{user}/day-activities', 'Api\DayActivityController@getDayActivities');
+        Route::patch('/users/{user}/activities/{activity}', 'Api\ActivitiesController@editActivity')
+            ->middleware('can:update,activity');
+        Route::post('/users/{user}/activities', 'Api\UserActivityController@addUserActivity');
+        Route::delete('/users/{user}/activities/{activity}', 'Api\ActivitiesController@deleteActivity')
+            ->middleware('can:delete,activity');
+        Route::post('/users/{user}/set-default-day-activities', 'Api\DayActivityController@setDefaultDayActivities')
+            ->middleware('admin');
+    });
+});

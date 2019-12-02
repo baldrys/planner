@@ -11,15 +11,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserController extends Controller
 {
-    // public function getUser(User $user) {
-    //     // throw new BadRequestHttpException('EXEPTION!!!!');
-    //     return new UserResource($user);
-    // }
-
     public function getUser(User $user) {
-        dd($user->getRole());
         return new UserResource($user);
     }
-
-
 }

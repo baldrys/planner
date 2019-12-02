@@ -8,6 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Auth\Access\AuthorizationException;
 
 trait ApiExceptionTrait
 {
@@ -30,8 +31,15 @@ trait ApiExceptionTrait
             $response['message'] = $exception->getMessage();
             $response['errors'] = $exception->errors();
             $statusCode = $exception->status;
-        } else {
-            return parent::render($request, $exception);
+        } 
+        else if($exception instanceof AuthorizationException){
+            $response['message'] = $exception->getMessage();
+            $statusCode = Response::HTTP_FORBIDDEN;
+        }
+        else {
+            //return parent::render($request, $exception);
+            $response['message'] = $exception->getMessage();
+            $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
         return response()->json($response, $statusCode);
     }

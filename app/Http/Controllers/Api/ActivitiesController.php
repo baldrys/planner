@@ -13,6 +13,11 @@ use App\Http\Resources\ActivityResource;
 class ActivitiesController extends Controller
 {
     public function editActivity(EditActivityRequest $request, User $user, Activity $activity) {
+
+        // if ($user->can('update', $activity)) {
+        //     return response()->json(['YES']);
+        // } else return response()->json(['NO']);
+
         // Проверить есть ли у пользователя данная ативность
         $activity->update($request->all());
         return new ActivityResource($activity);
