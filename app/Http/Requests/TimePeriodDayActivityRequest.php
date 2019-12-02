@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\JsonResponse;
 
 class TimePeriodDayActivityRequest extends FormRequest
 {
@@ -26,6 +27,32 @@ class TimePeriodDayActivityRequest extends FormRequest
         return [
             'start_date' => 'required|date',
             'end_date' => 'required|date',
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'start_date.required' => 'A :attribute is required',
+            'end_date.required'  => 'A :attribute is required',
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'start_date' => 'Start date',
+            'end_date' => 'End date',
         ];
     }
 }

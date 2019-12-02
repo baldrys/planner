@@ -16,7 +16,7 @@ Route::post('/register', 'Api\AuthController@register');
 Route::middleware('auth:api')->post('/logout', 'Api\AuthController@logout');
 
 // добавить аутентификацию и миделвер, проверку что юзер совпадает с аутентифецированным юзером
-Route::get('/users/{user}/', 'Api\UserController@getUser');
+Route::get('/users/{user}', 'Api\UserController@getUser');
 Route::get('/users/{user}/activities', 'Api\UserActivityController@getUserActivities');
 Route::post('/users/{user}/activities', 'Api\UserActivityController@addUserActivity');
 Route::patch('/users/{user}/activities/{activity}', 'Api\ActivitiesController@editActivity');
