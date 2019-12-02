@@ -17,6 +17,7 @@ class UserController extends Controller
     // }
 
     public function getUser(User $user) {
+        dd($user->getRole());
         return new UserResource($user);
     }
 

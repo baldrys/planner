@@ -48,4 +48,9 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough('App\DayActivity', 'App\UserActivity');
     }
+
+    public function getRole()
+    {
+        return $this->role;
+    }
 }
