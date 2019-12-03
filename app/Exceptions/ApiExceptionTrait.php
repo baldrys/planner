@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Auth\Access\AuthorizationException;
+use GuzzleHttp\Exception\BadResponseException;
 
 trait ApiExceptionTrait
 {
@@ -35,6 +36,14 @@ trait ApiExceptionTrait
         else if($exception instanceof AuthorizationException){
             $response['message'] = $exception->getMessage();
             $statusCode = Response::HTTP_FORBIDDEN;
+        }
+        else if($exception instanceof BadResponseException){
+            $response['message'] = $exception->getMessage();
+            $statusCode = $exception->getCode();
+        }
+        else if($exception instanceof HttpException){
+            $response['message'] = $exception->getMessage();
+            $statusCode = $exception->getStatusCode();
         }
         else {
             //return parent::render($request, $exception);

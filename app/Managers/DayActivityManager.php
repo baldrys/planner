@@ -11,10 +11,6 @@ use App\DayActivity;
 
 class DayActivityManager {
 
-    public function __contstruct(DayActivityService $dayActivityService) {
-        $this->dayActivityService = $dayActivityService;
-    }
-
     public function getDayActivities(User $user) {
         $endDateInSec = time();
         $daysInSec = $user->days_to_show*24*60*60;

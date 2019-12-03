@@ -18,7 +18,7 @@ class UserActivityController extends Controller
     }
 
     public function addUserActivity(AddUserActivityRequest $request, User $user) {
-        $newActivity = $user->activities()->create($request->all());
+        $newActivity = $user->activities()->create(['name' => $request->name]);
         return new ActivityResource($newActivity);
     }
 }
