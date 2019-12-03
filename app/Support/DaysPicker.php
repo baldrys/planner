@@ -4,14 +4,13 @@ namespace App\Support;
 
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use \Datetime;
 
-class DaysPicker
+class DatePicker
 {
-    public static function getDaysInWeek() {
-        $now = Carbon::now();
-        $start = $now->startOfWeek()->format('Y-m-d H:i');
-        $end =  $now->endOfWeek()->format('Y-m-d H:i');
-        $period = CarbonPeriod::create($start, $end);
-        return $period->toArray();
+    public static function getStartDate($days, $endDate) {
+        $daysInSec = $days*24*60*60;
+        $startDateInSec = strtotime($endDate) - $daysInSec;
+        return $startDateInSec;
     }
 }

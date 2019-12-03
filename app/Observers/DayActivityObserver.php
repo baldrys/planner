@@ -9,7 +9,6 @@ class DayActivityObserver
 
     public function retrieved(DayActivity $dayActivity)
     {
-        dd("hello from observer");
     }
 
     /**
@@ -20,7 +19,6 @@ class DayActivityObserver
      */
     public function created(DayActivity $dayActivity)
     {
-        // dd("hello");
     }
 
     /**

@@ -10,14 +10,14 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use App\Http\Requests\TimePeriodDayActivityRequest;
 use App\Http\Resources\DayActivityResource;
+use App\Support\DatePicker;
+use App\Managers\DayActivityManager;
 
 class DayActivityController extends Controller
 {
-    public function getDayActivities(TimePeriodDayActivityRequest $request, User $user) {
-        $from = $request->get('start_date');
-        $to = $request->get('end_date');
-        $userDayActivities = $user->dayActivities()->whereBetween('date', [$from, $to])->get();
-        // $userDayActivities = $user->dayActivities();
+    public function getDayActivities(User $user, DayActivityManager $manager) {
+
+        $userDayActivities = $manager->getDayActivities($user);
         return DayActivityResource::collection($userDayActivities);
     }
 }
