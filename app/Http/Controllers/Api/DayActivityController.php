@@ -17,13 +17,7 @@ class DayActivityController extends Controller
         $from = $request->get('start_date');
         $to = $request->get('end_date');
         $userDayActivities = $user->dayActivities()->whereBetween('date', [$from, $to])->get();
+        // $userDayActivities = $user->dayActivities();
         return DayActivityResource::collection($userDayActivities);
-    }
-
-    public function setDefaultDayActivities(TimePeriodDayActivityRequest $request, User $user, DayActivityService $dayActivityService) {
-        $from = new Carbon($request->get('start_date'));
-        $to = new Carbon($request->get('end_date'));
-        $res = $dayActivityService->setDefaultDayActivitiesForUser($user, $from, $to);
-        return DayActivityResource::collection($res);
     }
 }
