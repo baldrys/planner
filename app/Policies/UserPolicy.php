@@ -10,6 +10,18 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
+    private function isAdmin(User $user) {
+        if( ! ($user->getRole() == UserRoleEnum::Admin) )
+            return false;
+        return true;   
+    }
+
+    private function isUserCorrect(User $user, User $model) {
+        if(!($user->id == $model->id ))
+            return false;
+        return true;    
+    }
+
     /**
      * Determine whether the user can view any models.
      *
@@ -18,7 +30,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $this->isAdmin($user);
     }
 
     /**
@@ -30,10 +42,8 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        if( $user->getRole() == UserRoleEnum::Admin || $user->id == $model->id )
-            return true;
-        else 
-            return false;
+        return $this->isAdmin($user) || $this->isUserCorrect($user, $model);
+    
     }
 
     /**
@@ -44,7 +54,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        //
+        return $this->isAdmin($user);
     }
 
     /**
@@ -56,7 +66,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        //
+        return $this->isAdmin($user) || $this->isUserCorrect($user, $model);
     }
 
     /**
@@ -68,7 +78,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        //
+        return $this->isAdmin($user) || $this->isUserCorrect($user, $model);
     }
 
     /**
