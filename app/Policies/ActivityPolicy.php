@@ -11,6 +11,9 @@ class ActivityPolicy
 {
     use HandlesAuthorization;
 
+
+    
+
     /**
      * Determine whether the user can view any activities.
      *
@@ -31,7 +34,7 @@ class ActivityPolicy
      */
     public function view(User $user, Activity $activity)
     {
-        if( $user->getRole() == UserRoleEnum::Admin || $activity->userActivity->user_id == $user->id )
+        if( $user->isAdmin() || $user->hasActivity($activity) )
             return true;
         else 
             return false;
@@ -57,7 +60,7 @@ class ActivityPolicy
      */
     public function update(User $user, Activity $activity)
     {
-        if( $user->getRole() == UserRoleEnum::Admin || $activity->userActivity->user_id == $user->id )
+        if( $user->isAdmin() || $user->hasActivity($activity) )
             return true;
         else 
             return false;
@@ -72,7 +75,7 @@ class ActivityPolicy
      */
     public function delete(User $user, Activity $activity)
     {
-        if( $user->getRole() == UserRoleEnum::Admin || $activity->userActivity->user_id == $user->id )
+        if( $user->isAdmin() || $user->hasActivity($activity) )
             return true;
         else 
             return false;

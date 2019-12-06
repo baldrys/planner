@@ -3,10 +3,10 @@
 namespace App;
 
 use Laravel\Passport\HasApiTokens;
-use App\Support\DaysPicker;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\DayActivity;
+use App\Activity;
+use App\Support\Enums\UserRoleEnum;
 
 class User extends Authenticatable
 {
@@ -52,5 +52,15 @@ class User extends Authenticatable
     public function getRole()
     {
         return $this->role;
+    }
+
+    public function isAdmin() {
+        return ($this->getRole() == UserRoleEnum::Admin) ? true: false;
+    }
+
+    private function hasActivity(Activity $activity) {
+        if(!($activity->userActivity->user_id == $this->id))
+            return false;
+        return true;
     }
 }

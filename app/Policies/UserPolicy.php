@@ -10,14 +10,8 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
-    private function isAdmin(User $user) {
-        if( ! ($user->getRole() == UserRoleEnum::Admin) )
-            return false;
-        return true;   
-    }
-
-    private function isUserCorrect(User $user, User $model) {
-        if(!($user->id == $model->id ))
+    private function isUserCorrect(User $currentUser, User $user) {
+        if(!($currentUser->id == $user->id ))
             return false;
         return true;    
     }
@@ -30,7 +24,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return $this->isAdmin($user);
+        return $user->isAdmin();
     }
 
     /**
@@ -40,9 +34,9 @@ class UserPolicy
      * @param  \App\User  $model
      * @return mixed
      */
-    public function view(User $user, User $model)
+    public function view(User $currentUser, User $user)
     {
-        return $this->isAdmin($user) || $this->isUserCorrect($user, $model);
+        return $currentUser->isAdmin() || $this->isUserCorrect($currentUser, $user);
     
     }
 
@@ -54,7 +48,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return $this->isAdmin($user);
+        return $user->isAdmin();
     }
 
     /**
@@ -64,9 +58,9 @@ class UserPolicy
      * @param  \App\User  $model
      * @return mixed
      */
-    public function update(User $user, User $model)
+    public function update(User $currentUser, User $user)
     {
-        return $this->isAdmin($user) || $this->isUserCorrect($user, $model);
+        return $currentUser->isAdmin() || $this->isUserCorrect($currentUser, $user);
     }
 
     /**
@@ -76,9 +70,9 @@ class UserPolicy
      * @param  \App\User  $model
      * @return mixed
      */
-    public function delete(User $user, User $model)
+    public function delete(User $currentUser, User $user)
     {
-        return $this->isAdmin($user) || $this->isUserCorrect($user, $model);
+        return $currentUser->isAdmin() || $this->isUserCorrect($currentUser, $user);
     }
 
     /**
