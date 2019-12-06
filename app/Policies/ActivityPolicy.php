@@ -19,12 +19,9 @@ class ActivityPolicy
      */
     public function viewAny(User $user)
     {
-        if($user->getRole() == UserRoleEnum::Admin)
-            return true;
-        else 
-            return false;
+        return true;
     }
-
+    
     /**
      * Determine whether the user can view the activity.
      *

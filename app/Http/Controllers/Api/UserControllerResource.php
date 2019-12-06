@@ -15,6 +15,7 @@ class UserControllerResource extends Controller
     {
         $this->authorizeResource(User::class);
     }
+    
     /**
      * Display a listing of the resource.
      *

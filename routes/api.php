@@ -17,18 +17,9 @@ Route::post('/register', 'Api\AuthController@register');
 Route::middleware(['auth:api'])->group(function () {
     Route::post('/logout', 'Api\AuthController@logout');
     Route::resource('users', 'Api\UserControllerResource');
+    Route::resource('users.activities', 'Api\UserActivityResourceController');
     Route::middleware(['can:view,user'])->group(function () {
         Route::get('/users/{user}/day-activities', 'Api\DayActivityController@getDayActivities');
         Route::patch('/users/{user}/day-activities/{dayActivity}', 'Api\DayActivityController@editDayActivities');
-
-        // вынести в ресурсы и ресурс контроллелр объединить в один контроллер
-        Route::patch('/users/{user}/activities/{activity}', 'Api\ActivitiesController@editActivity')
-            ->middleware('can:update,activity');
-        Route::delete('/users/{user}/activities/{activity}', 'Api\ActivitiesController@deleteActivity')
-            ->middleware('can:delete,activity');
-
-        Route::get('/users/{user}/activities', 'Api\UserActivityController@getUserActivities');
-        Route::post('/users/{user}/activities', 'Api\UserActivityController@addUserActivity');
-
     });
 });
