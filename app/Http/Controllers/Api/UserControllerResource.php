@@ -51,7 +51,6 @@ class UserControllerResource extends Controller
      */
     public function show(User $user)
     {
-        dd($user->isAdmin());
         return new UserResource($user);
     }
 
