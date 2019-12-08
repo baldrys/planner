@@ -8,13 +8,14 @@ use App\Http\Resources\DayActivityResource;
 use App\Managers\DayActivityManager;
 use App\DayActivity;
 use App\Http\Requests\DayActivityEditRequest;
+use App\Http\Resources\DayActivityCollection;
 
 class DayActivityController extends Controller
 {
     public function getDayActivities(User $user, DayActivityManager $manager) {
 
         $userDayActivities = $manager->getDayActivities($user);
-        return DayActivityResource::collection($userDayActivities);
+        return new DayActivityCollection($userDayActivities);
     }
 
     public function editDayActivities(DayActivityEditRequest $request, User $user, DayActivity $dayActivity) {

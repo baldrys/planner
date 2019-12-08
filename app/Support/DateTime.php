@@ -6,7 +6,7 @@ namespace App\Support;
 class DateTime
 {
 
-    private const FORMAT = 'Y-m-d H:i:s';
+    private const FORMAT = 'Y-m-d';
 
 
     public static function formatDate($date) {

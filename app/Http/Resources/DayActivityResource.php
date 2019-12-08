@@ -17,7 +17,6 @@ class DayActivityResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'user' => new UserResource($this->userActivity->user),
             'activity' => new ActivityResource($this->userActivity->activity),
             'is_done' => $this->is_done,
             'date' => $this->date,
