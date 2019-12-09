@@ -46,18 +46,19 @@ class DayActivityManager {
      * @return void
      */
     private function setDefaultDayActivitiesForUser(User $user, $startDate, $endDate) {
-        $activityPeriod = $user->activity_period;
-        $userActivities = $user->activities()->get();
-        foreach ($userActivities as $userActivity) {
+        
+        $activities = $user->activities()->get();
+        foreach ($activities as $activity) {
+            $activityPeriod = $activity->userActivity->activity_period;
             $i = 0;
-            $lastActivityDay = $this->getLastActivityDay($userActivity);
+            $lastActivityDay = $this->getLastActivityDay($activity);
             $startDate =($lastActivityDay != null) ? $lastActivityDay: $endDate;
             $timeInterval = CarbonPeriod::create($startDate, $endDate)->toArray();
             foreach ($timeInterval as $day) {
                 $i++;
                 $isFreeDay = ($i % $activityPeriod == 0) ? 1: 0;
                 DayActivity::firstOrCreate([
-                    'user_activity_id' => $userActivity->id,
+                    'user_activity_id' => $activity->userActivity->id,
                     'date' => $day,
                     'is_free_day' =>  $isFreeDay
                 ]);      

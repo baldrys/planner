@@ -19,6 +19,7 @@ class DayActivityResource extends JsonResource
         return [
             'activity' => new ActivityResource($this->userActivity->activity),
             'is_done' => $this->is_done,
+            'is_free_day' => $this->is_free_day,
             'date' => $this->date,
         ];
     }
