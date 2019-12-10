@@ -9,13 +9,16 @@ use App\Managers\DayActivityManager;
 use App\DayActivity;
 use App\Http\Requests\DayActivityEditRequest;
 use App\Http\Resources\DayActivityCollection;
+use App\Http\Resources\ActivitiesWithDayActivitiesResource;
+use App\Http\Resources\ActivitiesWithDayActivitiesResourceCollection;
+use App\Support\DateTime;
 
 class DayActivityController extends Controller
 {
     public function getDayActivities(User $user, DayActivityManager $manager) {
-
-        $userDayActivities = $manager->getDayActivities($user);
-        return new DayActivityCollection($userDayActivities);
+        $activities = $manager->getDayActivities($user);
+        // return ActivitiesWithDayActivitiesResource::collection($activities);
+        return new ActivitiesWithDayActivitiesResourceCollection($activities);
     }
 
     public function editDayActivities(DayActivityEditRequest $request, User $user, DayActivity $dayActivity) {

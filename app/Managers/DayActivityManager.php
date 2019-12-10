@@ -7,8 +7,17 @@ use Carbon\CarbonPeriod;
 use App\DayActivity;
 use App\Support\DateTime;
 use App\Activity;
+use App\Repositories\UserRepository;
+use App\Http\Resources\ActivitiesWithDayActivitiesResource;
 
 class DayActivityManager {
+
+    protected $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
 
     protected function getLastActivityDay(Activity $activity) {
         $dayActivities = $activity
@@ -16,18 +25,19 @@ class DayActivityManager {
             ->dayActivities()
             ->where('is_free_day', 0)
             ->orderBy('date', 'desc');
-            // dd($dayActivities->exists());
-        return ($dayActivities->exists()) ? DateTime::formatDate(strtotime($dayActivities->first()->date)) : null;
+        return ($dayActivities->exists()) ? DateTime::formatDate(strtotime($dayActivities->first()->date)) : DateTime::formatDate(time());
     }
 
     public function getDayActivities(User $user) {
-        $to = DateTime::formatDate(time());
-        $from = DateTime::formatDate(DateTime::getStartDate($user->days_to_show));
-        $this->setDefaultDayActivitiesForUser($user, $from, $to);
-        return $user->dayActivities()
-            ->whereDate('date', '>=', $from)
-            ->whereDate('date', '<=', $to)
-            ->get();
+        $this->setDefaultDayActivitiesForUser($user);
+        return $this->userRepository->getActivitiesWithDays($user);
+
+    }
+
+
+    protected function isFreeDay($period, $lastDay, $dayTocheck) {
+        $daysBetween = (strtotime($dayTocheck) - strtotime($lastDay) - 1)/(60*60*24);
+        return !(($daysBetween + 1)%($period + 1) == 0); 
     }
 
     /**
@@ -45,22 +55,22 @@ class DayActivityManager {
      *
      * @return void
      */
-    private function setDefaultDayActivitiesForUser(User $user, $startDate, $endDate) {
-        
+    private function setDefaultDayActivitiesForUser(User $user) {
+        $today = DateTime::formatDate(time());
         $activities = $user->activities()->get();
         foreach ($activities as $activity) {
             $activityPeriod = $activity->userActivity->activity_period;
-            $i = 0;
             $lastActivityDay = $this->getLastActivityDay($activity);
-            $startDate =($lastActivityDay != null) ? $lastActivityDay: $endDate;
-            $timeInterval = CarbonPeriod::create($startDate, $endDate)->toArray();
+            $timeInterval = CarbonPeriod::create($lastActivityDay, $today)->toArray();
             foreach ($timeInterval as $day) {
-                $i++;
-                $isFreeDay = ($i % $activityPeriod == 0) ? 1: 0;
                 DayActivity::firstOrCreate([
                     'user_activity_id' => $activity->userActivity->id,
                     'date' => $day,
-                    'is_free_day' =>  $isFreeDay
+                    'is_free_day' =>  $this->isFreeDay(
+                        $activityPeriod, 
+                        $lastActivityDay,
+                        $day
+                        )
                 ]);      
             }
         }
