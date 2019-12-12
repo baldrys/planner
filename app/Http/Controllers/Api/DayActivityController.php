@@ -12,12 +12,12 @@ use App\Http\Resources\DayActivityCollection;
 use App\Http\Resources\ActivitiesWithDayActivitiesResource;
 use App\Http\Resources\ActivitiesWithDayActivitiesResourceCollection;
 use App\Support\DateTime;
+use App\Http\Requests\GetDayActivitiesReqeust;
 
 class DayActivityController extends Controller
 {
-    public function getDayActivities(User $user, DayActivityManager $manager) {
-        $activities = $manager->getDayActivities($user);
-        // return ActivitiesWithDayActivitiesResource::collection($activities);
+    public function getDayActivities(GetDayActivitiesReqeust $request, User $user, DayActivityManager $manager) {
+        $activities = $manager->getDayActivities($user, $request->start_date, $request->end_date);
         return new ActivitiesWithDayActivitiesResourceCollection($activities);
     }
 
@@ -25,6 +25,6 @@ class DayActivityController extends Controller
         $dayActivity->update([
             'is_done' => $request->is_done,
         ]);
-        return new DayActivityResource($$dayActivity);
+        return new DayActivityResource($dayActivity);
     }
 }

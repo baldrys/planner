@@ -10,6 +10,7 @@ class DateTime
 
 
     public static function formatDate($date) {
+        // dd($date);
         return date(self::FORMAT, $date);
     }
 

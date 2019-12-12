@@ -28,9 +28,9 @@ class DayActivityManager {
         return ($dayActivities->exists()) ? DateTime::formatDate(strtotime($dayActivities->first()->date)) : DateTime::formatDate(time());
     }
 
-    public function getDayActivities(User $user) {
+    public function getDayActivities(User $user, $startDate, $endDate) {
         $this->setDefaultDayActivitiesForUser($user);
-        return $this->userRepository->getActivitiesWithDays($user);
+        return $this->userRepository->getActivitiesWithDays($user, $startDate, $endDate);
 
     }
 
@@ -67,9 +67,9 @@ class DayActivityManager {
                     'user_activity_id' => $activity->userActivity->id,
                     'date' => $day,
                     'is_free_day' =>  $this->isFreeDay(
-                        $activityPeriod, 
-                        $lastActivityDay,
-                        $day
+                            $activityPeriod, 
+                            $lastActivityDay,
+                            $day
                         )
                 ]);      
             }

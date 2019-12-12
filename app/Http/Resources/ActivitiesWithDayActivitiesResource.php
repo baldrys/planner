@@ -18,7 +18,7 @@ class ActivitiesWithDayActivitiesResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'activity_period' => $this->userActivity->activity_period,
-            'day_activities' => DayActivityResource::collection($this->userActivity->dayActivities()->get())
-    ];
+            'day_activities' => DayActivityResource::collection($this->userActivity->dayActivities)
+        ];
     }
 }
