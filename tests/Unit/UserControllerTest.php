@@ -3,35 +3,16 @@
 namespace Tests\Unit;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\User;
 use App\Http\Resources\UserResource;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Hash;
-use App\Support\Enums\UserRoleEnum;
 
 
-class UserControllerTest extends TestCase
+class UserControllerTest extends UserAuthenticated
 {
 
     use RefreshDatabase;
-
-
-    protected $user;
-
-    public function setUp() :void
-    {
-        parent::setUp();
-        $user = factory(User::class)->create();
-        $this->actingAs($user, 'api');
-        $this->user = $user;
-    }
-
-    protected function makeUserAdmin(){
-        $this->user->role = UserRoleEnum::Admin;
-        return $this->user;
-    }
 
     protected function getDataToPostUser(){
         return [
@@ -40,7 +21,6 @@ class UserControllerTest extends TestCase
             'password' => Hash::make('123456'),
         ];
     }
-
 
     // --- GET USER ---
 

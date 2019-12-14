@@ -26,6 +26,7 @@ class AddUserActivityRequest extends FormRequest
     {
         return [
             'name' => 'required',
+            'activity_period' => 'required|integer|min:0',
         ];
     }
 }

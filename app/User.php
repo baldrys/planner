@@ -44,6 +44,11 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Activity', 'user_activities');
     }
 
+    public function userActivities()
+    {
+        return $this->hasMany('App\UserActivity');
+    }
+
     public function dayActivities()
     {
         return $this->hasManyThrough('App\DayActivity', 'App\UserActivity');
@@ -58,7 +63,7 @@ class User extends Authenticatable
         return ($this->getRole() == UserRoleEnum::Admin) ? true: false;
     }
 
-    private function hasActivity(Activity $activity) {
+    public function hasActivity(Activity $activity) {
         if(!($activity->userActivity->user_id == $this->id))
             return false;
         return true;

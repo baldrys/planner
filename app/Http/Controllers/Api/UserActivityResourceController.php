@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AddUserActivityRequest;
 use App\Http\Resources\ActivityResource;
 use App\Http\Requests\EditActivityRequest;
+use App\UserActivity;
+use App\Managers\UserActivityManager;
 
 class UserActivityResourceController extends Controller
 {
@@ -37,9 +39,9 @@ class UserActivityResourceController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function store(AddUserActivityRequest $request, User $user)
+    public function store(AddUserActivityRequest $request, User $user, UserActivityManager $manager)
     {
-        $newActivity = $user->activities()->create(['name' => $request->name]);
+        $newActivity = $manager->createActivity($request, $user);
         return new ActivityResource($newActivity);
     }
 
@@ -63,10 +65,10 @@ class UserActivityResourceController extends Controller
      * @param  \App\Activity  $activity
      * @return \Illuminate\Http\Response
      */
-    public function update(EditActivityRequest $request, User $user, Activity $activity)
+    public function update(EditActivityRequest $request, User $user, Activity $activity, UserActivityManager $manager)
     {
-        $activity->update(['name' => $request->name]);
-        return new ActivityResource($activity);
+        $updatedActivity = $manager->updateActivity($request, $activity);
+        return new ActivityResource($updatedActivity);
     }
 
     /**
