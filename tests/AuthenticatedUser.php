@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests;
 
-use Tests\TestCase;
+// use Tests\TestCase;
 use App\User;
 use App\Support\Enums\UserRoleEnum;
+use Illuminate\Foundation\Testing\TestCase;
 
-
-class UserAuthenticated extends TestCase
+abstract class AuthenticatedUser extends TestCase
 {
-
+    use CreatesApplication;
     protected $user;
 
     public function setUp() :void

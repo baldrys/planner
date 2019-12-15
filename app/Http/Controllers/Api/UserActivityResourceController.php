@@ -17,6 +17,7 @@ class UserActivityResourceController extends Controller
 
     public function __construct()
     {
+        $this->middleware('can:view,user');
         $this->authorizeResource(Activity::class);
     }
 

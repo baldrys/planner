@@ -7,9 +7,9 @@ use App\User;
 use App\Http\Resources\UserResource;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Hash;
+use Tests\AuthenticatedUser;
 
-
-class UserControllerTest extends UserAuthenticated
+class UserControllerTest extends AuthenticatedUser
 {
 
     use RefreshDatabase;
