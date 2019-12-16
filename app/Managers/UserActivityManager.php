@@ -22,7 +22,7 @@ class UserActivityManager{
     public function updateActivity(EditActivityRequest $request, Activity $activity) {
 
         $activity->update(['name' => $request->name]);
-        $activity->userActivity()->update([
+        $activity->userActivity->update([
             'activity_period'=>$request->activity_period
         ]);
 

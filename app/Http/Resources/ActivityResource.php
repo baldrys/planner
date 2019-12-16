@@ -17,7 +17,7 @@ class ActivityResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'activity_period' => $this->userActivity->activity_period,
+            'activity_period' => (int)$this->userActivity->activity_period,
         ];
     }
 }
