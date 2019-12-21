@@ -12,30 +12,11 @@ use App\User;
 use App\Http\Resources\UserResource;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Hash;
-use Tests\AuthenticatedUser;
+use Tests\AppTest;
 
-class UserActivityTest extends AuthenticatedUser
+class UserActivityTest extends AppTest
 {
-
     use RefreshDatabase;
-
-    protected function getDataToPostActivity(){
-        return [
-            'name' => 'Test activity',
-            'activity_period' => 69
-        ];
-    }
-
-    protected function createIncorrectUser() {
-        return factory(User::class)->create();
-    }
-
-    protected function createActivityForIncorrectUser() {
-        return  factory(UserActivity::class)->create([
-            'user_id' => $this->createIncorrectUser()->id
-        ]);
-    }
-
 
     // --- GET USER ACTIVITIES---
     /**

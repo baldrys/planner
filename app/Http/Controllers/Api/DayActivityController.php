@@ -16,6 +16,12 @@ use App\Http\Requests\GetDayActivitiesReqeust;
 
 class DayActivityController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:view,user');
+    }
+
     public function getDayActivities(GetDayActivitiesReqeust $request, User $user, DayActivityManager $manager) {
         $activities = $manager->getDayActivities($user, $request->start_date, $request->end_date);
         return new ActivitiesWithDayActivitiesResourceCollection($activities);

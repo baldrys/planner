@@ -20,6 +20,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::resource('users.activities', 'Api\UserActivityResourceController');
     Route::middleware(['can:view,user'])->group(function () {
         Route::get('/users/{user}/day-activities', 'Api\DayActivityController@getDayActivities');
-        Route::patch('/users/{user}/day-activities/{dayActivity}', 'Api\DayActivityController@editDayActivities');
+        Route::patch('/users/{user}/day-activities/{dayActivity}', 'Api\DayActivityController@editDayActivities')
+            ->middleware('can:update,dayActivity');
     });
 });

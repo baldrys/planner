@@ -11,8 +11,3 @@
 |
 */
 
-Route::get('/',  'PlannerController@index');
-Route::get('/activities',  'DayActivityController@index');
-// Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');

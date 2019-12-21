@@ -6,22 +6,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\User;
 use App\Http\Resources\UserResource;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Hash;
-use Tests\AuthenticatedUser;
 
-class UserControllerTest extends AuthenticatedUser
+use Tests\AppTest;
+
+class UserControllerTest extends AppTest
 {
-
     use RefreshDatabase;
-
-    protected function getDataToPostUser(){
-        return [
-            'name' => 'Pasha69',
-            'email' => 'redkva@gmail.com',
-            'password' => Hash::make('123456'),
-        ];
-    }
-
     // --- GET USER ---
 
     /**
@@ -32,7 +22,7 @@ class UserControllerTest extends AuthenticatedUser
     public function getUser_CorrectUser_Success()
     {
         $response = $this->get("/api/users/{$this->user->id}");
-        $user = User::first();
+        $user = User::find($this->user->id);
         $response->assertStatus(Response::HTTP_OK)->assertExactJson([
             'data' => (new UserResource($user))->toArray(null)
             ]
