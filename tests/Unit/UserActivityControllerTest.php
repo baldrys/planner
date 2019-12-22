@@ -27,7 +27,6 @@ class UserActivityTest extends AppTest
     public function getUserActivities_CorrectUser_Success()
     {
         $NUM_OF_ACTIVITIES = 5;
-        $this->makeUserAdmin();
         factory(UserActivity::class, $NUM_OF_ACTIVITIES)->create();
         $response = $this->get("/api/users/{$this->user->id}/activities");
         $response->assertStatus(Response::HTTP_OK)->assertJsonCount($NUM_OF_ACTIVITIES, 'data');
@@ -45,6 +44,23 @@ class UserActivityTest extends AppTest
         factory(UserActivity::class, $NUM_OF_ACTIVITIES)->create();
         $response = $this->get("/api/users/{$incorrectUser->id}/activities");
         $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * 
+     * @test
+     * @return void
+     */
+    public function getUserActivities_UserIsAdmin_Success()
+    {
+        $this->makeUserAdmin();
+        $userToCheck = factory(User::class)->create();
+        $NUM_OF_ACTIVITIES = 5;
+        factory(UserActivity::class, $NUM_OF_ACTIVITIES)->create([
+            'user_id' => $userToCheck->id
+        ]);
+        $response = $this->get("/api/users/{$userToCheck->id}/activities");
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount($NUM_OF_ACTIVITIES, 'data');
     }
     // --- / GET USER ACTIVITIES---
 
@@ -70,11 +86,39 @@ class UserActivityTest extends AppTest
      * @test
      * @return void
      */
+    public function getUserActivity_UserIsAdmin_Success()
+    {
+        $userActivity = factory(UserActivity::class)->create();
+        $response = $this->get("/api/users/{$this->user->id}/activities/{$userActivity->activity->id}");
+        $activity = Activity::first();
+        $response->assertStatus(Response::HTTP_OK)->assertExactJson([
+            'data' => (new ActivityResource($activity))->toArray(null)
+            ]
+        );
+    }
+
+    /**
+     * 
+     * @test
+     * @return void
+     */
     public function getUserActivity_InCorrectUser_Forbidden()
     {
         $userActivity = $this->createActivityForIncorrectUser();
         $response = $this->get("/api/users/{$this->user->id}/activities/{$userActivity->activity->id}");
         $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * 
+     * @test
+     * @return void
+     */
+    public function getUserActivity_ActivityNotCreated_NotFound()
+    {
+        $ID_OF_NOT_CREATED_ACTIVITY = 69;
+        $response = $this->get("/api/users/{$this->user->id}/activities/{$ID_OF_NOT_CREATED_ACTIVITY}");
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
     // --- / GET USER ACTIVITY ---
 
@@ -95,6 +139,40 @@ class UserActivityTest extends AppTest
             ]
         );
     }
+
+    // --- POST USER ACTIVITY---
+    /**
+     * 
+     * @test
+     * @return void
+     */
+    public function postActivity_UserIsAdmin_Created()
+    {
+        $this->makeUserAdmin();
+        $userToCheck = $this->createIncorrectUser();
+        $response = $this->post("/api/users/{$userToCheck->id}/activities",
+            $this->getDataToPostActivity()
+        );
+        $createdActivity = Activity::first();
+        $response->assertStatus(Response::HTTP_OK)->assertExactJson([
+            'data' => (new ActivityResource($createdActivity))->toArray(null)
+            ]
+        );
+    }
+
+    /**
+     * 
+     * @test
+     * @return void
+     */
+    public function postActivity_IncorrectUser_Forbidden()
+    {
+        $incorrectUser = $this->createIncorrectUser();
+        $response = $this->post("/api/users/{$incorrectUser->id}/activities",
+            $this->getDataToPostActivity()
+        );
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
     // --- / POST USER ACTIVITY---
 
     // --- PATCH USER ACTIVITY---
@@ -103,7 +181,7 @@ class UserActivityTest extends AppTest
      * @test
      * @return void
      */
-    public function patchActivity_DataCorrect_Created()
+    public function patchActivity_DataCorrect_Updated()
     {
         $createdActivity = factory(UserActivity::class)->create()->activity;
         $response = $this->patch("/api/users/{$this->user->id}/activities/{$createdActivity->id}",
@@ -114,6 +192,45 @@ class UserActivityTest extends AppTest
             'data' => (new ActivityResource($createdActivity))->toArray(null)
             ]
         );
+    }
+
+    /**
+     * 
+     * @test
+     * @return void
+     */
+    public function patchActivity_UserIsAdmin_Updated()
+    {
+        $this->makeUserAdmin();
+        $userToCheck = factory(User::class)->create();
+        $createdActivity = factory(UserActivity::class)->create([
+            'user_id' => $userToCheck->id
+        ])->activity;
+        $response = $this->patch("/api/users/{$userToCheck->id}/activities/{$createdActivity->id}",
+            $this->getDataToPostActivity()
+        );
+        $createdActivity = Activity::first();  
+        $response->assertStatus(Response::HTTP_OK)->assertExactJson([
+            'data' => (new ActivityResource($createdActivity))->toArray(null)
+            ]
+        );
+    }
+
+    /**
+     * 
+     * @test
+     * @return void
+     */
+    public function patchActivity_IncorrectUser_Forbidden()
+    {
+        $incorrectUser = $this->createIncorrectUser();
+        $createdActivity = factory(UserActivity::class)->create([
+            'user_id' => $incorrectUser->id
+        ])->activity;
+        $response = $this->patch("/api/users/{$incorrectUser->id}/activities/{$createdActivity->id}",
+            $this->getDataToPostActivity()
+        );
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     /**
@@ -155,6 +272,22 @@ class UserActivityTest extends AppTest
     {
         $createdActivity = factory(UserActivity::class)->create()->activity;
         $response = $this->delete("/api/users/{$this->user->id}/activities/{$createdActivity->id}");
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /**
+     * 
+     * @test
+     * @return void
+     */
+    public function deleteActivity_UserIsAdmin_Success()
+    {
+        $this->makeUserAdmin();
+        $userToCheck = factory(User::class)->create();
+        $createdActivity = factory(UserActivity::class)->create([
+            'user_id' => $userToCheck->id
+        ])->activity;
+        $response = $this->delete("/api/users/{$userToCheck->id}/activities/{$createdActivity->id}");
         $response->assertStatus(Response::HTTP_OK);
     }
 

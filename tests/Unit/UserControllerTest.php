@@ -52,6 +52,22 @@ class UserControllerTest extends AppTest
         $response = $this->get("/api/users/{$ID_OF_NOT_CREATED_USER}");
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
+
+    /**
+     * 
+     * @test
+     * @return void
+     */
+    public function getUser_UserIsAdmin_Success()
+    {
+        $this->makeUserAdmin();
+        $userToCheck = factory(User::class)->create();
+        $response = $this->get("/api/users/{$userToCheck->id}");
+        $response->assertStatus(Response::HTTP_OK)->assertExactJson([
+            'data' => (new UserResource($userToCheck))->toArray(null)
+            ]
+        );
+    }
     // --- / GET USER ---
 
     // --- POST USER ---
@@ -132,6 +148,25 @@ class UserControllerTest extends AppTest
             $this->getDataToPostUser()
         );
         $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * 
+     * @test
+     * @return void
+     */
+    public function patchUser_UserIsAdmin_Success()
+    {
+        $this->makeUserAdmin();
+        $userToCheck = factory(User::class)->create();
+        $response = $this->patch("/api/users/{$userToCheck->id}",
+            $this->getDataToPostUser()
+        );
+        $updatedUser = User::find($userToCheck->id);
+        $response->assertStatus(Response::HTTP_OK)->assertExactJson([
+            'data' => (new UserResource($updatedUser))->toArray(null)
+            ]
+        );
     }
     // --- / PATCH USER ---
 
