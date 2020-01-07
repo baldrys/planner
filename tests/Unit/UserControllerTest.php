@@ -6,12 +6,22 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\User;
 use App\Http\Resources\UserResource;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Hash;
 
 use Tests\AppTest;
 
 class UserControllerTest extends AppTest
 {
     use RefreshDatabase;
+
+    protected function getDataToPostUser(){
+        return [
+            'name' => 'Pasha69',
+            'email' => 'redkva@gmail.com',
+            'password' => Hash::make('123456'),
+        ];
+    }
+
     // --- GET USER ---
 
     /**

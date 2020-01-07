@@ -18,6 +18,23 @@ class UserActivityTest extends AppTest
 {
     use RefreshDatabase;
 
+    protected function getDataToPostActivity(){
+        return [
+            'name' => 'Test activity',
+            'activity_period' => 69
+        ];
+    }
+
+    protected function createIncorrectUser() {
+        return factory(User::class)->create();
+    }
+
+    protected function createActivityForIncorrectUser() {
+        return  factory(UserActivity::class)->create([
+            'user_id' => $this->createIncorrectUser()->id
+        ]);
+    }
+
     // --- GET USER ACTIVITIES---
     /**
      * 

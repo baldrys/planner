@@ -23,6 +23,30 @@ class DayActivityControllerTest extends AppTest
         ];
     }
 
+    protected function calcFreeDays($totalDays, $period){
+       return intdiv($totalDays + 1, ($period + 1));
+    }
+
+    protected function getLastActivityDay($totalDays) {
+        return date('Y-m-d', time() - $totalDays*24*60*60);
+    }
+
+    protected function getDayActivitiesFromResponse($response) {
+        return $response->json()['data']['activities'][0]['day_activities'];
+    }
+
+    protected function getNumOfActivityDays($response) {
+        return collect( $this->getDayActivitiesFromResponse($response))->filter(function($item){
+            return $item['is_free_day'] == 0;
+        })->count();
+    }
+
+    protected function getNumOfFreeDays($response) {
+        return collect( $this->getDayActivitiesFromResponse($response))->filter(function($item){
+            return $item['is_free_day'] == 1;
+        })->count();
+    }
+
     // --- GET DAY ACTIVITIES---
     /**
      * 
@@ -37,8 +61,8 @@ class DayActivityControllerTest extends AppTest
             'activity_period' =>$PERIOD
         ]);
 
-        $lastActivityDay = date('Y-m-d', time() - $TOTAL_DAYS*24*60*60);
-        $freeDays = intdiv($TOTAL_DAYS + 1, ($PERIOD + 1));
+        $lastActivityDay = $this->getLastActivityDay($TOTAL_DAYS);
+        $freeDays = $this->calcFreeDays($TOTAL_DAYS, $PERIOD);
         $NUM_OF_DAY_ACTIVITIES = $TOTAL_DAYS + 1 - $freeDays;
         factory(DayActivity::class)->create([
             'date' => $lastActivityDay,
@@ -51,12 +75,8 @@ class DayActivityControllerTest extends AppTest
                 'end_date' => date('Y-m-d', time())
             ]
         );
-        $numOfActivityDays = collect( $response->json()['data']['activities'][0]['day_activities'])->filter(function($item){
-            return $item['is_free_day'] == 0;
-        })->count();
-        $numOfFreeDays= collect( $response->json()['data']['activities'][0]['day_activities'])->filter(function($item){
-            return $item['is_free_day'] == 1;
-        })->count();
+        $numOfActivityDays = $this->getNumOfActivityDays($response);
+        $numOfFreeDays = $this->getNumOfFreeDays($response);
         $this->assertEquals($numOfFreeDays, $freeDays);
         $this->assertEquals($numOfActivityDays, $NUM_OF_DAY_ACTIVITIES);
         $response->assertStatus(Response::HTTP_OK)->assertJsonCount($TOTAL_DAYS + 1, 'data.activities.0.day_activities');

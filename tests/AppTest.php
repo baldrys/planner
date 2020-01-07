@@ -7,7 +7,7 @@ use App\User;
 use App\Support\Enums\UserRoleEnum;
 use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
+
 use App\UserActivity;
 
 abstract class AppTest extends TestCase
@@ -28,29 +28,8 @@ abstract class AppTest extends TestCase
         return $this->user;
     }
 
-    protected function getDataToPostActivity(){
-        return [
-            'name' => 'Test activity',
-            'activity_period' => 69
-        ];
-    }
 
-    protected function createIncorrectUser() {
-        return factory(User::class)->create();
-    }
 
-    protected function createActivityForIncorrectUser() {
-        return  factory(UserActivity::class)->create([
-            'user_id' => $this->createIncorrectUser()->id
-        ]);
-    }
 
-    protected function getDataToPostUser(){
-        return [
-            'name' => 'Pasha69',
-            'email' => 'redkva@gmail.com',
-            'password' => Hash::make('123456'),
-        ];
-    }
 
 }
