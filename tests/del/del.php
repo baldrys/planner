@@ -25,3 +25,6 @@ function writePropertyToEnv(string $propertyName, string $newProperty, string $c
     file_put_contents($configFile, $str);
 }
 
+$x = realpath(__DIR__ . DIRECTORY_SEPARATOR . '/../../') . '/.env.testing';
+
+echo $x;
