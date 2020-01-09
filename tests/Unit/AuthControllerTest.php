@@ -63,7 +63,8 @@ class AuthControllerTest extends TestCase
     public function registerUser_EmailAlreadyExists_Forbidden()
     {
         $user = factory(User::class)->create($this->getDataToPostUser());
-        $response = $this->post("/api/register",
+        $response = $this->withHeaders(['Accept' => 'application/json'])
+            ->post("/api/register",
             $this->getDataToPostUser()
         );
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
