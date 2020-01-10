@@ -14,17 +14,23 @@ use App\Support\ConfigFile;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Config;
 
 class AuthControllerTest extends TestCase
 {
     use RefreshDatabase;
 
     protected function getDataToPostUser(){
+        
         return [
             'name' => 'Pasha69',
             'email' => 'redkva@gmail.com',
-            'password' => "secret",
+            'password' => Hash::make($this->getPassword()),
         ];
+    }
+
+    protected function getPassword() {
+        return "123456";
     }
 
     public function setUp() :void {
@@ -35,6 +41,7 @@ class AuthControllerTest extends TestCase
         $ID = 2;
         $code = DB::table('oauth_clients')->where('id', $ID)->first()->secret;
         ConfigFile::writePropertyToEnv($propertyName, $code, $fileName);
+        Config::set("services.passport.client_secret", $code);
     }
 
     /**
@@ -81,6 +88,18 @@ class AuthControllerTest extends TestCase
         $this->actingAs($user, 'api');
         $response = $this->post("/api/logout");
         $response->assertStatus(Response::HTTP_OK);
+    public function loginUser_UserDataCorrect_Success()
+    {
+        $userData = $this->getDataToPostUser();
+        $user = factory(User::class)->create($userData);
+        $body = [
+            'username' => $user->email,
+            'password' => $this->getPassword()
+        ];
+        
+        $this->json('POST','/api/login',$body,['Accept' => 'application/json'])
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure(['token_type','expires_in','access_token','refresh_token']);
     }
 
     /**
@@ -94,5 +113,17 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
+
+    public function loginUser_UserDataInCorrect_Fail()
+    {
+        $userData = $this->getDataToPostUser();
+        $user = factory(User::class)->create($userData);
+        $body = [
+            'username' => $user->email,
+            'password' => strrev($this->getPassword())
+        ];
+        $this->json('POST','/api/login',$body,['Accept' => 'application/json'])
+            ->assertStatus(Response::HTTP_BAD_REQUEST);
+    }
 
 }
