@@ -88,6 +88,24 @@ class AuthControllerTest extends TestCase
         $this->actingAs($user, 'api');
         $response = $this->post("/api/logout");
         $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /**
+     * 
+     * @test
+     * @return void
+     */
+    public function logoutUser_UserIsNotLogged_Fail()
+    {
+        $response = $this->withHeaders(['Accept' => 'application/json'])->post("/api/logout");
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * 
+     * @test
+     * @return void
+     */
     public function loginUser_UserDataCorrect_Success()
     {
         $userData = $this->getDataToPostUser();
@@ -107,13 +125,6 @@ class AuthControllerTest extends TestCase
      * @test
      * @return void
      */
-    public function logoutUser_UserIsNotLogged_Fail()
-    {
-        $response = $this->withHeaders(['Accept' => 'application/json'])->post("/api/logout");
-        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
-    }
-
-
     public function loginUser_UserDataInCorrect_Fail()
     {
         $userData = $this->getDataToPostUser();
