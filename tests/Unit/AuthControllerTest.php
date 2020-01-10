@@ -70,4 +70,29 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * 
+     * @test
+     * @return void
+     */
+    public function logoutUser_UserLogged_Success()
+    {
+        $user = factory(User::class)->create();
+        $this->actingAs($user, 'api');
+        $response = $this->post("/api/logout");
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /**
+     * 
+     * @test
+     * @return void
+     */
+    public function logoutUser_UserIsNotLogged_Fail()
+    {
+        $response = $this->withHeaders(['Accept' => 'application/json'])->post("/api/logout");
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+
 }
