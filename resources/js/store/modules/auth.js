@@ -1,39 +1,63 @@
 import UserAuthApi from '../../api/UserAuth';
 
+const AUTHENTICATING = "AUTHENTICATING";
 const AUTHENTICATION_SUCCESS = "AUTHENTICATION_SUCCESS";
 const AUTHENTICATION_ERROR = "AUTHENTICATION_ERROR";
+
+const REGISTERING = "REGISTERING";
+const REGISTRATION_SUCCESS = "REGISTRATION_SUCCESS";
 const REGISTER_USER_ERROR = "REGISTER_USER_ERROR";
 
+
 const defaultState = {
-    user: null,
     isAuthenticated: false,
     error: null,
-    isLoading: false
+    isLoading: false,
+    token: localStorage.getItem('access_token') || null,
 };
 
 const mutations = {
-    [AUTHENTICATION_SUCCESS](state, user) {
+    [AUTHENTICATING](state) {
+        state.isLoading = true;
+        state.error = null;
+        state.isAuthenticated = false;
+    },
+    [AUTHENTICATION_SUCCESS](state, token) {
         state.error = null;
         state.isAuthenticated = true;
-        state.user = user;
+        state.isLoading = false;
+        state.token = token
     },
     [AUTHENTICATION_ERROR](state, error) {
         state.error = error;
         state.isAuthenticated = false;
-        state.user = null;
+        state.isLoading = false
+    },
+    [REGISTERING](state) {
+        state.isLoading = true;
+        state.error = null;
+        state.isAuthenticated = false;
+    },
+    [REGISTRATION_SUCCESS](state) {
+        state.error = null;
+        state.isAuthenticated = false;
+        state.isLoading = false
     },
     [REGISTER_USER_ERROR](state, error) {
         state.error = error;
         state.isAuthenticated = false;
-        state.user = null;
+        state.isLoading = false
     },
 };
 
 const actions = {
     async login({ commit }, payload) {
+        commit(AUTHENTICATING);
         try {
             const response = await UserAuthApi.login(payload.username, payload.password);
-            commit(AUTHENTICATION_SUCCESS, response.data);
+            const token = response.data.access_token
+            commit(AUTHENTICATION_SUCCESS, token);
+            localStorage.setItem('access_token', token)
             return response.data;
         } catch (error) {
             commit(AUTHENTICATION_ERROR, error);
@@ -41,8 +65,10 @@ const actions = {
         }
     },
     async register({ commit }, payload) {
+        commit(REGISTERING);
         try {
             const response = await UserAuthApi.register(payload.username, payload.email, payload.password);
+            commit(REGISTRATION_SUCCESS);
             return response.data;
         } catch (error) {
             commit(REGISTER_USER_ERROR, error);
@@ -62,10 +88,7 @@ const getters = {
         return state.isLoading;
     },
     isAuthenticated(state) {
-        return state.isAuthenticated;
-    },
-    user(state) {
-        return state.user;
+        return state.token ? true: false;
     }
 };
 

@@ -11,7 +11,7 @@
 
         <div v-if="isAuthenticated" class="navbar-item">
             <div>
-                <p>Привет {{ username }}!</p>
+                <p>Привет!</p>
             </div>
             <a class="button is-warning" href="/logout">
                 <button type="button" class="btn btn-primary">Выход</button>
@@ -25,10 +25,7 @@
         name: "Home",
         computed: {
             isAuthenticated() {
-                return this.$store.getters['user/isAuthenticated'];
-            },
-            isUser() {
-                return this.$store.getters['user/hasRole']('ROLE_USER');
+                return this.$store.getters['auth/isAuthenticated'];
             },
             // isAdmin() {
             //     return this.$store.getters['user/hasRole']('ROLE_ADMIN');

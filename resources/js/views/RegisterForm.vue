@@ -32,10 +32,10 @@
         },
         computed:{
             hasError() {
-                    return this.$store.getters['user/hasError'];
+                    return this.$store.getters['auth/hasError'];
                 },
             error() {
-                return this.$store.getters['user/error']
+                return this.$store.getters['auth/error']
             }
         },
         methods: {
@@ -45,7 +45,7 @@
                     email: this.email,
                     password: this.password
                 };
-                this.$store.dispatch('user/register', payload).then(
+                this.$store.dispatch('auth/register', payload).then(
                     () => {
                         if (!this.hasError) {
                             this.$router.push({ name: "LoginForm", params: {userRegistered: true }});

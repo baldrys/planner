@@ -5,7 +5,7 @@ const REGISTER_URL = "/api/register";
 
 export default {
     login(username, password) {
-        return axios.post(LOGIN_URL, { name: username, password: password });
+        return axios.post(LOGIN_URL, { username: username, password: password });
     },
     register(username, email, password) {
         return axios.post(REGISTER_URL, { name: username, email:email, password: password });

@@ -1,19 +1,18 @@
 <template>
     <div>
-        <div v-if="isUserJustREgistered" class="alert alert-success" role="alert">
+        <div v-if="isUserJustRegistered" class="alert alert-success" role="alert">
             Вы успешно зарегистрировались!
         </div>
         <div class="form-group">
             <label for="email">Почта</label>
-            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+            <input v-model="username" type="email" class="form-control" id="email" aria-describedby="emailHelp">
         </div>
         <div class="form-group">
             <label for="password">Пароль</label>
-            <input type="password" class="form-control" id="password" >
+            <input v-model="password" type="password" class="form-control" id="password" >
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" @click="login">Submit</button>
         <ErrorMessage v-if="hasError" :error="error" />
-        <div v-if="hasError">ERROR</div>
     </div>
 </template>
 
@@ -22,31 +21,44 @@
 
     export default {
         name: "LoginForm",
+        components: { ErrorMessage },
+        data() {
+            return {
+                username: null,
+                password: null,
+                isUserJustRegistered: this.userRegistered ? true: false
+            };
+        },
         props:{
             userRegistered: {
                 type: Boolean,
             }
         },
+        methods:{
+            login() {
+                const payload = {
+                    username: this.username,
+                    password: this.password
+                };
+                this.$store.dispatch('auth/login', payload).then(
+                    () => {
+                        if (!this.hasError) {
+                            this.$router.push({ name: "home"});
+                        } else {
+                            console.log(this.error)
+                        }
+                    }
+                );
+            }
+        },
         computed:{
             hasError() {
-                    return this.$store.getters['user/hasError'];
+                    return this.$store.getters['auth/hasError'];
                 },
             error() {
-                return this.$store.getters['user/error']
+                return this.$store.getters['auth/error']
             }
-        },
-        data: function () {
-            return {
-                isUserJustREgistered: this.userRegistered
-            }
-        },
-        components: { ErrorMessage },
-            hasError() {
-                return this.$store.getters['user/hasError'];
-            },
-            error() {
-                return this.$store.getters['user/error']
-            }
+        }
     }
 </script>
 

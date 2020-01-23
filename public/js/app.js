@@ -1882,6 +1882,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ErrorMessage",
   props: {
@@ -1929,10 +1930,7 @@ __webpack_require__.r(__webpack_exports__);
   name: "Home",
   computed: {
     isAuthenticated: function isAuthenticated() {
-      return this.$store.getters['user/isAuthenticated'];
-    },
-    isUser: function isUser() {
-      return this.$store.getters['user/hasRole']('ROLE_USER');
+      return this.$store.getters['auth/isAuthenticated'];
     },
     // isAdmin() {
     //     return this.$store.getters['user/hasRole']('ROLE_ADMIN');
@@ -1973,36 +1971,50 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "LoginForm",
+  components: {
+    ErrorMessage: _components_errorMessage__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      username: null,
+      password: null,
+      isUserJustRegistered: this.userRegistered ? true : false
+    };
+  },
   props: {
     userRegistered: {
       type: Boolean
     }
   },
-  computed: {
-    hasError: function hasError() {
-      return this.$store.getters['user/hasError'];
-    },
-    error: function error() {
-      return this.$store.getters['user/error'];
+  methods: {
+    login: function login() {
+      var _this = this;
+
+      var payload = {
+        username: this.username,
+        password: this.password
+      };
+      this.$store.dispatch('auth/login', payload).then(function () {
+        if (!_this.hasError) {
+          _this.$router.push({
+            name: "home"
+          });
+        } else {
+          console.log(_this.error);
+        }
+      });
     }
   },
-  data: function data() {
-    return {
-      isUserJustREgistered: this.userRegistered
-    };
-  },
-  components: {
-    ErrorMessage: _components_errorMessage__WEBPACK_IMPORTED_MODULE_0__["default"]
-  },
-  hasError: function hasError() {
-    return this.$store.getters['user/hasError'];
-  },
-  error: function error() {
-    return this.$store.getters['user/error'];
+  computed: {
+    hasError: function hasError() {
+      return this.$store.getters['auth/hasError'];
+    },
+    error: function error() {
+      return this.$store.getters['auth/error'];
+    }
   }
 });
 
@@ -2053,10 +2065,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     hasError: function hasError() {
-      return this.$store.getters['user/hasError'];
+      return this.$store.getters['auth/hasError'];
     },
     error: function error() {
-      return this.$store.getters['user/error'];
+      return this.$store.getters['auth/error'];
     }
   },
   methods: {
@@ -2068,7 +2080,7 @@ __webpack_require__.r(__webpack_exports__);
         email: this.email,
         password: this.password
       };
-      this.$store.dispatch('user/register', payload).then(function () {
+      this.$store.dispatch('auth/register', payload).then(function () {
         if (!_this.hasError) {
           _this.$router.push({
             name: "LoginForm",
@@ -3353,7 +3365,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "notification is-danger" }, [
-    _vm._v("\n    " + _vm._s(_vm.error.response.data.message) + "\n")
+    _vm._v("\n    ОШИБКА\n")
   ])
 }
 var staticRenderFns = []
@@ -3430,16 +3442,20 @@ var render = function() {
     _vm._v(" "),
     _vm.isAuthenticated
       ? _c("div", { staticClass: "navbar-item" }, [
-          _c("div", [
-            _c("p", [_vm._v("Привет " + _vm._s(_vm.username) + "!")])
-          ]),
+          _vm._m(0),
           _vm._v(" "),
-          _vm._m(0)
+          _vm._m(1)
         ])
       : _vm._e()
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [_c("p", [_vm._v("Привет!")])])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -3481,7 +3497,7 @@ var render = function() {
   return _c(
     "div",
     [
-      _vm.isUserJustREgistered
+      _vm.isUserJustRegistered
         ? _c(
             "div",
             { staticClass: "alert alert-success", attrs: { role: "alert" } },
@@ -3489,53 +3505,80 @@ var render = function() {
           )
         : _vm._e(),
       _vm._v(" "),
-      _vm._m(0),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "email" } }, [_vm._v("Почта")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.username,
+              expression: "username"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            type: "email",
+            id: "email",
+            "aria-describedby": "emailHelp"
+          },
+          domProps: { value: _vm.username },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.username = $event.target.value
+            }
+          }
+        })
+      ]),
       _vm._v(" "),
-      _vm._m(1),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "password" } }, [_vm._v("Пароль")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.password,
+              expression: "password"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { type: "password", id: "password" },
+          domProps: { value: _vm.password },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.password = $event.target.value
+            }
+          }
+        })
+      ]),
       _vm._v(" "),
       _c(
         "button",
-        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        {
+          staticClass: "btn btn-primary",
+          attrs: { type: "submit" },
+          on: { click: _vm.login }
+        },
         [_vm._v("Submit")]
       ),
       _vm._v(" "),
       _vm.hasError
         ? _c("ErrorMessage", { attrs: { error: _vm.error } })
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.hasError ? _c("div", [_vm._v("ERROR")]) : _vm._e()
+        : _vm._e()
     ],
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "email" } }, [_vm._v("Почта")]),
-      _vm._v(" "),
-      _c("input", {
-        staticClass: "form-control",
-        attrs: { type: "email", id: "email", "aria-describedby": "emailHelp" }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "password" } }, [_vm._v("Пароль")]),
-      _vm._v(" "),
-      _c("input", {
-        staticClass: "form-control",
-        attrs: { type: "password", id: "password" }
-      })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -19852,7 +19895,7 @@ var REGISTER_URL = "/api/register";
 /* harmony default export */ __webpack_exports__["default"] = ({
   login: function login(username, password) {
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(LOGIN_URL, {
-      name: username,
+      username: username,
       password: password
     });
   },
@@ -20018,22 +20061,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _modules_user__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/user */ "./resources/js/store/modules/user.js");
+/* harmony import */ var _modules_auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/auth */ "./resources/js/store/modules/auth.js");
 
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
-    user: _modules_user__WEBPACK_IMPORTED_MODULE_2__["default"]
+    auth: _modules_auth__WEBPACK_IMPORTED_MODULE_2__["default"]
   }
 }));
 
 /***/ }),
 
-/***/ "./resources/js/store/modules/user.js":
+/***/ "./resources/js/store/modules/auth.js":
 /*!********************************************!*\
-  !*** ./resources/js/store/modules/user.js ***!
+  !*** ./resources/js/store/modules/auth.js ***!
   \********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -20050,56 +20093,76 @@ var _mutations;
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
+var AUTHENTICATING = "AUTHENTICATING";
 var AUTHENTICATION_SUCCESS = "AUTHENTICATION_SUCCESS";
 var AUTHENTICATION_ERROR = "AUTHENTICATION_ERROR";
+var REGISTERING = "REGISTERING";
+var REGISTRATION_SUCCESS = "REGISTRATION_SUCCESS";
 var REGISTER_USER_ERROR = "REGISTER_USER_ERROR";
 var defaultState = {
-  user: null,
   isAuthenticated: false,
-  error: null
+  error: null,
+  isLoading: false,
+  token: localStorage.getItem('access_token') || null
 };
-var mutations = (_mutations = {}, _defineProperty(_mutations, AUTHENTICATION_SUCCESS, function (state, user) {
+var mutations = (_mutations = {}, _defineProperty(_mutations, AUTHENTICATING, function (state) {
+  state.isLoading = true;
+  state.error = null;
+  state.isAuthenticated = false;
+}), _defineProperty(_mutations, AUTHENTICATION_SUCCESS, function (state, token) {
   state.error = null;
   state.isAuthenticated = true;
-  state.user = user;
+  state.isLoading = false;
+  state.token = token;
 }), _defineProperty(_mutations, AUTHENTICATION_ERROR, function (state, error) {
   state.error = error;
   state.isAuthenticated = false;
-  state.user = null;
+  state.isLoading = false;
+}), _defineProperty(_mutations, REGISTERING, function (state) {
+  state.isLoading = true;
+  state.error = null;
+  state.isAuthenticated = false;
+}), _defineProperty(_mutations, REGISTRATION_SUCCESS, function (state) {
+  state.error = null;
+  state.isAuthenticated = false;
+  state.isLoading = false;
 }), _defineProperty(_mutations, REGISTER_USER_ERROR, function (state, error) {
   state.error = error;
   state.isAuthenticated = false;
-  state.user = null;
+  state.isLoading = false;
 }), _mutations);
 var actions = {
   login: function login(_ref, payload) {
-    var commit, response;
+    var commit, response, token;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function login$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             commit = _ref.commit;
-            _context.prev = 1;
-            _context.next = 4;
+            commit(AUTHENTICATING);
+            _context.prev = 2;
+            _context.next = 5;
             return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(_api_UserAuth__WEBPACK_IMPORTED_MODULE_1__["default"].login(payload.username, payload.password));
 
-          case 4:
+          case 5:
             response = _context.sent;
-            commit(AUTHENTICATION_SUCCESS, response.data);
+            token = response.data.access_token;
+            commit(AUTHENTICATION_SUCCESS, token);
+            localStorage.setItem('access_token', token);
             return _context.abrupt("return", response.data);
 
-          case 9:
-            _context.prev = 9;
-            _context.t0 = _context["catch"](1);
+          case 12:
+            _context.prev = 12;
+            _context.t0 = _context["catch"](2);
             commit(AUTHENTICATION_ERROR, _context.t0);
             return _context.abrupt("return", null);
 
-          case 13:
+          case 16:
           case "end":
             return _context.stop();
         }
       }
-    }, null, null, [[1, 9]]);
+    }, null, null, [[2, 12]]);
   },
   register: function register(_ref2, payload) {
     var commit, response;
@@ -20108,26 +20171,28 @@ var actions = {
         switch (_context2.prev = _context2.next) {
           case 0:
             commit = _ref2.commit;
-            _context2.prev = 1;
-            _context2.next = 4;
+            commit(REGISTERING);
+            _context2.prev = 2;
+            _context2.next = 5;
             return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(_api_UserAuth__WEBPACK_IMPORTED_MODULE_1__["default"].register(payload.username, payload.email, payload.password));
 
-          case 4:
+          case 5:
             response = _context2.sent;
+            commit(REGISTRATION_SUCCESS);
             return _context2.abrupt("return", response.data);
 
-          case 8:
-            _context2.prev = 8;
-            _context2.t0 = _context2["catch"](1);
+          case 10:
+            _context2.prev = 10;
+            _context2.t0 = _context2["catch"](2);
             commit(REGISTER_USER_ERROR, _context2.t0);
             return _context2.abrupt("return", null);
 
-          case 12:
+          case 14:
           case "end":
             return _context2.stop();
         }
       }
-    }, null, null, [[1, 8]]);
+    }, null, null, [[2, 10]]);
   }
 };
 var getters = {
@@ -20137,11 +20202,11 @@ var getters = {
   error: function error(state) {
     return state.error;
   },
-  isAuthenticated: function isAuthenticated(state) {
-    return state.isAuthenticated;
+  isLoading: function isLoading(state) {
+    return state.isLoading;
   },
-  user: function user(state) {
-    return state.user;
+  isAuthenticated: function isAuthenticated(state) {
+    return state.token ? true : false;
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
