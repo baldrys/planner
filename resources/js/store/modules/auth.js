@@ -8,6 +8,9 @@ const REGISTERING = "REGISTERING";
 const REGISTRATION_SUCCESS = "REGISTRATION_SUCCESS";
 const REGISTER_USER_ERROR = "REGISTER_USER_ERROR";
 
+const LOGGING_OUT = "LOGGING_OUT";
+const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
+const LOGOUT_ERROR = "LOGOUT_ERROR";
 
 const defaultState = {
     isAuthenticated: false,
@@ -20,33 +23,40 @@ const mutations = {
     [AUTHENTICATING](state) {
         state.isLoading = true;
         state.error = null;
-        state.isAuthenticated = false;
     },
     [AUTHENTICATION_SUCCESS](state, token) {
         state.error = null;
-        state.isAuthenticated = true;
         state.isLoading = false;
         state.token = token
     },
     [AUTHENTICATION_ERROR](state, error) {
         state.error = error;
-        state.isAuthenticated = false;
         state.isLoading = false
     },
     [REGISTERING](state) {
         state.isLoading = true;
         state.error = null;
-        state.isAuthenticated = false;
     },
     [REGISTRATION_SUCCESS](state) {
         state.error = null;
-        state.isAuthenticated = false;
         state.isLoading = false
     },
     [REGISTER_USER_ERROR](state, error) {
         state.error = error;
-        state.isAuthenticated = false;
         state.isLoading = false
+    },
+    [LOGGING_OUT](state, error) {
+        state.error = error;
+        state.isLoading = true
+    },
+    [LOGOUT_ERROR](state, error) {
+        state.error = error;
+        state.isLoading = false
+    },
+    [LOGOUT_SUCCESS](state, error) {
+        state.error = error;
+        state.isLoading = false;
+        state.token = null
     },
 };
 
@@ -57,6 +67,7 @@ const actions = {
             const response = await UserAuthApi.login(payload.username, payload.password);
             const token = response.data.access_token
             commit(AUTHENTICATION_SUCCESS, token);
+            // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             localStorage.setItem('access_token', token)
             return response.data;
         } catch (error) {
@@ -72,6 +83,19 @@ const actions = {
             return response.data;
         } catch (error) {
             commit(REGISTER_USER_ERROR, error);
+            return null;
+        }
+    },
+    async logout({ commit }) {
+        commit(LOGGING_OUT);
+        try {
+            const response = await UserAuthApi.logout();
+            commit(LOGOUT_SUCCESS);
+            delete axios.defaults.headers.common['Authorization'];
+            localStorage.removeItem("access_token");
+            return response.data;
+        } catch (error) {
+            commit(LOGOUT_ERROR, error);
             return null;
         }
     },

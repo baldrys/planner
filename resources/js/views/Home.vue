@@ -13,9 +13,7 @@
             <div>
                 <p>Привет!</p>
             </div>
-            <a class="button is-warning" href="/logout">
-                <button type="button" class="btn btn-primary">Выход</button>
-            </a>
+            <button type="button" class="btn btn-primary" @click="logout">Выход</button>
         </div>
     </div>
 </template>
@@ -32,6 +30,20 @@
             // },
             username() {
                 return this.isAuthenticated ? this.$store.state.security.user.username : null;
+            }
+        },
+        methods: {
+            logout(){
+                this.$store.dispatch('auth/logout').then(
+                    () => {
+                        // if (!this.hasError) {
+                        //     this.$router.push({ name: "home"});
+                        // } else {
+                        if (!this.hasError)
+                            console.log(this.error)
+                        // }
+                    }
+                );
             }
         }
     }

@@ -4,3 +4,6 @@ $(".dropdown-menu a").click(function(){
     const dropdownMenu = icon.parent().parent().parent().find('i').first().attr('class', iconClass);
     console.log(icon.parent()[0]);
  });
+
+console.log("!!!!!!!!!!!!!")
+
