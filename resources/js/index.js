@@ -5,5 +5,4 @@ $(".dropdown-menu a").click(function(){
     console.log(icon.parent()[0]);
  });
 
-console.log("!!!!!!!!!!!!!")
 

@@ -1,6 +1,6 @@
 <template>
     <div class="notification is-danger">
-        {{ error.response.data.message }}
+        {{ error }}
     </div>
 </template>
 

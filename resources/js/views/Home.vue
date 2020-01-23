@@ -1,10 +1,10 @@
 <template>
     <div>
         <div v-if="!isAuthenticated" class="navbar-item">
-            <router-link v-if="!isAuthenticated" :to="{ name: 'LoginForm' }" class="button is-warning">
+            <router-link :to="{ name: 'LoginForm' }" class="button is-warning">
                 <button type="button" class="btn btn-primary">Вход</button>
             </router-link>
-            <router-link v-if="!isAuthenticated" :to="{ name: 'RegisterForm' }" class="button is-warning">
+            <router-link :to="{ name: 'RegisterForm' }" class="button is-warning">
                 <button type="button" class="btn btn-primary">Регистрация</button>
             </router-link>
         </div>

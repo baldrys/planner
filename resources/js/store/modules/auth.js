@@ -1,4 +1,5 @@
 import UserAuthApi from '../../api/UserAuth';
+import axios from 'axios'
 
 const AUTHENTICATING = "AUTHENTICATING";
 const AUTHENTICATION_SUCCESS = "AUTHENTICATION_SUCCESS";
@@ -45,16 +46,16 @@ const mutations = {
         state.error = error;
         state.isLoading = false
     },
-    [LOGGING_OUT](state, error) {
-        state.error = error;
+    [LOGGING_OUT](state) {
+        state.error = null;
         state.isLoading = true
     },
     [LOGOUT_ERROR](state, error) {
         state.error = error;
         state.isLoading = false
     },
-    [LOGOUT_SUCCESS](state, error) {
-        state.error = error;
+    [LOGOUT_SUCCESS](state) {
+        state.error = null;
         state.isLoading = false;
         state.token = null
     },
@@ -67,7 +68,7 @@ const actions = {
             const response = await UserAuthApi.login(payload.username, payload.password);
             const token = response.data.access_token
             commit(AUTHENTICATION_SUCCESS, token);
-            // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             localStorage.setItem('access_token', token)
             return response.data;
         } catch (error) {
