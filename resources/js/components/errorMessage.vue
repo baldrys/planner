@@ -1,6 +1,9 @@
 <template>
-    <div class="notification is-danger">
-        {{ error }}
+    <div class="alert alert-danger">
+        {{ error.response.data.message }}
+        <div v-for="(value, key) in dataErrors" :key="key">
+            {{ value[0] }}
+        </div>
     </div>
 </template>
 
@@ -11,6 +14,11 @@
             error: {
                 type: Error,
                 required: true
+            }
+        },
+        computed: {
+            dataErrors() {
+                return this.error.response.data.errors
             }
         }
     }

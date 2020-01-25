@@ -13,12 +13,23 @@ const LOGGING_OUT = "LOGGING_OUT";
 const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
 const LOGOUT_ERROR = "LOGOUT_ERROR";
 
-const defaultState = {
-    isAuthenticated: false,
-    error: null,
-    isLoading: false,
-    token: localStorage.getItem('access_token') || null,
-};
+const RESET_AUTH_STATE = "RESET_AUTH_STATE";
+
+// const defaultState = {
+//     isAuthenticated: false,
+//     error: null,
+//     isLoading: false,
+//     token: localStorage.getItem('access_token') || null,
+// };
+
+const getDefaultState = () => {
+    return {
+        isAuthenticated: false,
+        error: null,
+        isLoading: false,
+        token: localStorage.getItem('access_token') || null,
+    }
+  }
 
 const mutations = {
     [AUTHENTICATING](state) {
@@ -59,6 +70,9 @@ const mutations = {
         state.isLoading = false;
         state.token = null
     },
+    [RESET_AUTH_STATE] (state) {
+        Object.assign(state, getDefaultState())
+      }
 };
 
 const actions = {
@@ -100,6 +114,9 @@ const actions = {
             return null;
         }
     },
+    resetAuthState ({ commit }) {
+        commit(RESET_AUTH_STATE)
+      },
 };
 
 const getters = {
@@ -119,7 +136,7 @@ const getters = {
 
 export default {
     namespaced: true,
-    state: defaultState,
+    state: getDefaultState(),
     getters,
     actions,
     mutations,
