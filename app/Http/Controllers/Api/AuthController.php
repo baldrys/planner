@@ -38,4 +38,9 @@ class AuthController extends Controller
         });
         return response()->json('Logged out successfully', 200);
     }
+
+    public function getUserInfo()
+    {
+        return new UserResource(auth()->user()); 
+    }
 }

@@ -13,6 +13,10 @@ const LOGGING_OUT = "LOGGING_OUT";
 const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
 const LOGOUT_ERROR = "LOGOUT_ERROR";
 
+const FETCHING_USER = "FETCHING_USER";
+const FETCH_USER_SUCCESS = "FETCH_USER_SUCCESS";
+const FETCH_USER_ERROR = "FETCH_USER_ERROR";
+
 const RESET_AUTH_STATE = "RESET_AUTH_STATE";
 
 // const defaultState = {
@@ -28,6 +32,11 @@ const getDefaultState = () => {
         error: null,
         isLoading: false,
         token: localStorage.getItem('access_token') || null,
+        user: {
+            id: '',
+            name: '',
+            role: '',
+        }
     }
   }
 
@@ -72,7 +81,21 @@ const mutations = {
     },
     [RESET_AUTH_STATE] (state) {
         Object.assign(state, getDefaultState())
-      }
+    },
+    [FETCHING_USER](state) {
+        state.error = null;
+        state.isLoading = true
+    },
+    [FETCH_USER_SUCCESS](state, user) {
+        state.error = null;
+        state.isLoading = false
+        state.user = user
+    },
+    [FETCH_USER_ERROR](state, error) {
+        state.error = error;
+        state.isLoading = false;
+        state.user = null
+    },
 };
 
 const actions = {
@@ -117,6 +140,24 @@ const actions = {
     resetAuthState ({ commit }) {
         commit(RESET_AUTH_STATE)
       },
+    async getUserInfo({ commit }) {
+        commit(FETCHING_USER);
+        try {
+            const response = await UserAuthApi.getUserInfo();
+            const user = {
+                id: response.data.data.id,
+                name:  response.data.data.name,
+                role: response.data.data.role,
+            };
+            commit(FETCH_USER_SUCCESS, user);
+            console.log(user);
+            return user;
+        } catch (error) {
+            commit(FETCH_USER_ERROR, error);
+            console.log(error);
+            return null;
+        }
+    },
 };
 
 const getters = {
@@ -131,6 +172,12 @@ const getters = {
     },
     isAuthenticated(state) {
         return state.token ? true: false;
+    },
+    isAdmin(state) {
+        return state.user.role == 'Admin' ? true: false;
+    },
+    getUser(state) {
+        return state.user;
     }
 };
 

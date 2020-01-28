@@ -3,6 +3,7 @@ import Router from "vue-router"
 import Home from './views/Home.vue'
 import LoginFormView from './views/LoginForm'
 import RegisterFormView from './views/RegisterForm'
+import AdminView from './views/Admin'
 
 Vue.use(Router)
 
@@ -23,7 +24,8 @@ const routes = [
             name: 'LoginForm',
             props: true,
             meta: {
-                title: 'Вход'
+                title: 'Вход',
+                requiresAuth: true
             },
         },
         { 
@@ -32,6 +34,15 @@ const routes = [
             name: 'RegisterForm',
             meta: {
                 title: 'Регистрация'
+            }, 
+        },
+        { 
+            path: '/admin', 
+            component: AdminView, 
+            name: 'admin',
+            meta: {
+                title: 'Административная панель',
+                requiresAuth: true
             }, 
         },
     ]
