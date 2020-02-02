@@ -1,15 +1,19 @@
 body {
-  background: rgb(206, 206, 255); 
   font-family: 'Roboto Condensed', sans-serif;
   font-family: 'Roboto', sans-serif;
 }
-#app, #app > div, html, body {
-  height: 100%;
-}
 
-.vertical-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 90%;
-}
+// #app, #app > div, html, body {
+//   height: 100%;
+// }
+
+// .vertical-center {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   height: 90%;
+// }
+
+// .bg-second-color {
+//   background-color: $second-color;
+// }

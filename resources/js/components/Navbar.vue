@@ -1,40 +1,34 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <router-link :to="{ name: 'home'}" active-class="nav-link">
+                    <router-link :to="{ name: 'home'}" active-class="nav-link text-light">
                         Главная
                     </router-link>
                 </li>
 
                 <li class="nav-item">
-                    <router-link :to="{ name: 'RegisterForm'}" class="nav-link">
+                    <router-link :to="{ name: 'RegisterForm'}" class="nav-link text-light">
                         Регистрация
                     </router-link>
                 </li>
                 <li v-if="!isAuthenticated" class="nav-item">
-                    <router-link :to="{ name: 'LoginForm'}" class="nav-link">
+                    <router-link :to="{ name: 'LoginForm'}" class="nav-link text-light">
                         Вход
                     </router-link>
                 </li>
-                <!-- <li class="nav-item">
-                    <router-link :to="{ name: 'RegisterForm'}" active-class="nav-link">
-                        Выход
-                    </router-link>
-                </li> -->
             </ul>
 
             <ul v-if="isAuthenticated" class="navbar-nav nav-bar-right">
-                <li class="nav-item">
-                    <span class="navbar-text"> {{ user.name }}</span>
+                <li class="nav-item d-flex align-items-center">
+                    <i class="material-icons text-light">
+                        person_outline
+                    </i>
+                    <span class="navbar-text text-light text-light"> {{ user.name }}</span>
                 </li>
-
                 <li class="nav-item">
-                    <a href="#" @click="logout" class="nav-link">
+                    <a href="#" @click="logout" class="nav-link text-light">
                         Выход
                     </a>
                 </li>

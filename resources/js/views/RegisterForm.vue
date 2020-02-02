@@ -1,53 +1,54 @@
 <template>
-    <div class="container">
-        <div class="row mt-5">
-            <div class="col-4 offset-4">
-                <h1>Регистрация</h1>
-                <ErrorMessage v-if="hasError" :error="error" />
-                <div class="form-group">
-                    <label for="username">Имя</label>
-                    <input 
-                        v-model="username" 
-                        class="form-control" 
-                        :class="{'is-invalid': ($v.username.$dirty && !$v.username.required) || ($v.username.$dirty && !$v.username.minLength)}"
-                        name="username" 
-                        id="username">
-                    <div v-if="$v.username.$dirty && !$v.username.required" class="alert alert-danger">Пожалуйста введите имя </div>
-                    <div v-else-if="$v.username.$dirty && !$v.username.minLength" class="alert alert-danger">Минимальная длина имени 6 символов </div>
+    <div class="flex-grow-1 d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-4 offset-4 p-3 border border-dark bg-second-color">
+                    <h1>Регистрация</h1>
+                    <ErrorMessage v-if="hasError" :error="error" />
+                    <div class="form-group">
+                        <label for="username">Имя</label>
+                        <input 
+                            v-model="username" 
+                            class="form-control" 
+                            :class="{'is-invalid': ($v.username.$dirty && !$v.username.required) || ($v.username.$dirty && !$v.username.minLength)}"
+                            name="username" 
+                            id="username">
+                        <div v-if="$v.username.$dirty && !$v.username.required" class="alert alert-danger">Пожалуйста введите имя </div>
+                        <div v-else-if="$v.username.$dirty && !$v.username.minLength" class="alert alert-danger">Минимальная длина имени 6 символов </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Почта</label>
+                        <input 
+                            v-model="email" 
+                            type="email"
+                            class="form-control" 
+                            :class="{'is-invalid': ($v.email.$dirty && !$v.email.required) || ($v.email.$dirty && !$v.email.email)}"
+                            name="email" 
+                            id="email" 
+                            aria-describedby="emailHelp">
+                        <div v-if="$v.email.$dirty && !$v.email.required" class="alert alert-danger">Пожалуйста введите email </div>
+                        <div v-else-if="$v.email.$dirty && !$v.email.email" class="alert alert-danger">Пожалуйста введите корректный email </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Пароль</label>
+                        <input 
+                            v-model="password" 
+                            name="password" 
+                            type="password" 
+                            class="form-control" 
+                            :class="{'is-invalid': ($v.password.$dirty && !$v.password.required) || ($v.password.$dirty && !$v.password.minLength)}"
+                            id="password">
+                        <div v-if="$v.password.$dirty && !$v.password.required" class="alert alert-danger">Пожалуйста введите пароль </div>
+                        <div v-else-if="$v.password.$dirty && !$v.password.minLength" class="alert alert-danger">Минимальная длина пароля 6 символов </div>
+                    </div>
+                    <button class="btn btn-dark btn-block" type="button"  @click="register" :disabled="isLoading">
+                        <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Зарегистрироваться
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label for="email">Почта</label>
-                    <input 
-                        v-model="email" 
-                        type="email"
-                        class="form-control" 
-                        :class="{'is-invalid': ($v.email.$dirty && !$v.email.required) || ($v.email.$dirty && !$v.email.email)}"
-                        name="email" 
-                        id="email" 
-                        aria-describedby="emailHelp">
-                    <div v-if="$v.email.$dirty && !$v.email.required" class="alert alert-danger">Пожалуйста введите email </div>
-                    <div v-else-if="$v.email.$dirty && !$v.email.email" class="alert alert-danger">Пожалуйста введите корректный email </div>
-                </div>
-                <div class="form-group">
-                    <label for="password">Пароль</label>
-                    <input 
-                        v-model="password" 
-                        name="password" 
-                        type="password" 
-                        class="form-control" 
-                        :class="{'is-invalid': ($v.password.$dirty && !$v.password.required) || ($v.password.$dirty && !$v.password.minLength)}"
-                        id="password">
-                    <div v-if="$v.password.$dirty && !$v.password.required" class="alert alert-danger">Пожалуйста введите пароль </div>
-                    <div v-else-if="$v.password.$dirty && !$v.password.minLength" class="alert alert-danger">Минимальная длина пароля 6 символов </div>
-                </div>
-                <button class="btn btn-primary" type="button"  @click="register" :disabled="isLoading">
-                    <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Зарегистрироваться
-                </button>
             </div>
         </div>
     </div>
-
 </template>
 
 <script>

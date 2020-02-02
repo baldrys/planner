@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="d-flex flex-column min-vh-100" >
         <Navbar/>
         <!-- Отборажает нужную вьюху -->
         <router-view/>

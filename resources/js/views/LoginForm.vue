@@ -1,8 +1,8 @@
 <template>
-    <div class="vertical-center">
+    <div class="flex-grow-1 d-flex align-items-center">
         <div class="container" >
             <div class="row">
-                <div class="col-4 offset-4 p-3" style="background-color: #e3f2fd;">
+                <div class="col-4 offset-4 p-3 border border-dark bg-light">
                     <h1>Вход</h1>
                     <div v-if="isUserJustRegistered" class="alert alert-success" role="alert">
                         Вы успешно зарегистрировались!
@@ -33,7 +33,7 @@
                         <div v-if="$v.password.$dirty && !$v.password.required" class="alert alert-danger">Пожалуйста введите пароль </div>
 
                     </div>
-                    <button class="btn btn-primary" type="button"  @click="login" :disabled="isLoading">
+                    <button class="btn btn-dark btn-block" type="button"  @click="login" :disabled="isLoading">
                         <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             Вход
                     </button>
