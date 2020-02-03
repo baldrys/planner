@@ -1983,19 +1983,35 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     resizeRightBorder: function resizeRightBorder(elem) {
+      var SIZE_TO_HIDE = 200;
+      var HIDDEN_BORDER_WIDTH = 2;
+      var elementInDom = document.getElementsByClassName(elem)[0];
+      var nav = elementInDom.firstChild;
       var borderDiv = document.createElement("div");
       borderDiv.className = "sidebar-border";
-      var elementInDom = document.getElementsByClassName(elem)[0];
 
-      var mouseUp = function mouseUp() {
+      var mouseUp = function mouseUp(e) {
         document.removeEventListener("mousemove", mouseMove);
         window.removeEventListener("mouseup", mouseUp);
+        var resizedWidth = e.clientX - elementInDom.offsetLeft;
+
+        if (resizedWidth <= SIZE_TO_HIDE) {
+          elementInDom.style.width = "".concat(HIDDEN_BORDER_WIDTH, "px");
+        }
       };
 
       var mouseMove = function mouseMove(e) {
-        var elWidth = parseInt(window.getComputedStyle(elementInDom).getPropertyValue("width"));
-        var offset = e.clientX - elementInDom.offsetLeft;
-        elementInDom.style.width = "".concat(offset, "px");
+        var resizedWidth = e.clientX - elementInDom.offsetLeft;
+
+        if (resizedWidth > SIZE_TO_HIDE && nav.style.visibility == "hidden") {
+          nav.style.visibility = "visible";
+        }
+
+        if (resizedWidth <= SIZE_TO_HIDE && nav.style.visibility != "hidden") {
+          nav.style.visibility = "hidden";
+        }
+
+        elementInDom.style.width = "".concat(resizedWidth, "px");
       };
 
       borderDiv.addEventListener("mousedown", function (e) {
@@ -2428,7 +2444,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.sidebar{\n    position:relative;\n}\n.sidebar-border {\n    position: absolute;\n    cursor: e-resize;\n    width: 5px;\n    right: -5px;\n    top: 0;\n    height: 100%;\n    /* background-color: rgb(0, 0, 0); */\n}\n\n", ""]);
+exports.push([module.i, "\n.sidebar{\n    position:relative;\n    /* min-width: 150px; */\n    max-width: 300px;\n}\n.sidebar-border {\n    position: absolute;\n    cursor: e-resize;\n    width: 5px;\n    right: -5px;\n    top: 0;\n    height: 100%;\n    /* background-color: rgb(0, 0, 0); */\n}\n\n", ""]);
 
 // exports
 
@@ -4468,7 +4484,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("nav", { staticClass: "sidebar" }, [
+    return _c("nav", { staticClass: "sidebar bg-secondary" }, [
       _c("ul", { staticClass: "nav" }, [
         _c("li", { staticClass: "nav-item" }, [
           _c(
@@ -4583,14 +4599,7 @@ var render = function() {
   return _c(
     "div",
     { staticClass: "d-flex flex-grow-1" },
-    [
-      _c("Sidebar", {
-        staticClass: "bg-secondary",
-        staticStyle: { width: "200px" }
-      }),
-      _vm._v(" "),
-      _vm._m(0)
-    ],
+    [_c("Sidebar"), _vm._v(" "), _vm._m(0)],
     1
   )
 }

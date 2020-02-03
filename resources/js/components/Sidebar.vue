@@ -1,5 +1,5 @@
 <template>
-    <nav class="sidebar">
+    <nav class="sidebar bg-secondary">
         <ul class="nav">
             <li class="nav-item">
                 <a class="nav-link active text-light" href="#">
@@ -23,18 +23,30 @@ export default {
     },
     methods:{
         resizeRightBorder(elem) {
+            const SIZE_TO_HIDE = 200;
+            const HIDDEN_BORDER_WIDTH = 2;
+            const elementInDom = document.getElementsByClassName(elem)[0];
+            const nav = elementInDom.firstChild;
             let borderDiv = document.createElement("div");
             borderDiv.className = "sidebar-border";
-            const elementInDom = document.getElementsByClassName(elem)[0];
-
-            const mouseUp = function() {
+            const mouseUp = function(e) {
                 document.removeEventListener("mousemove", mouseMove);
                 window.removeEventListener("mouseup", mouseUp);
+                const resizedWidth = e.clientX - elementInDom.offsetLeft;
+                if(resizedWidth <= SIZE_TO_HIDE){
+
+                    elementInDom.style.width = `${HIDDEN_BORDER_WIDTH}px`;
+                } 
             };
             const mouseMove = function(e) {
-                const elWidth = parseInt(window.getComputedStyle(elementInDom).getPropertyValue("width"));
-                const offset = e.clientX - elementInDom.offsetLeft;
-                elementInDom.style.width = `${offset}px`;
+                const resizedWidth = e.clientX - elementInDom.offsetLeft;
+                if(resizedWidth > SIZE_TO_HIDE && nav.style.visibility == "hidden"){
+                    nav.style.visibility = "visible";
+                } 
+                if(resizedWidth <= SIZE_TO_HIDE && nav.style.visibility != "hidden"){
+                    nav.style.visibility = "hidden";
+                } 
+                elementInDom.style.width = `${resizedWidth}px`;
             };
 
             borderDiv.addEventListener("mousedown", function (e) {
@@ -53,6 +65,8 @@ export default {
 
     .sidebar{
         position:relative;
+        /* min-width: 150px; */
+        max-width: 300px;
     }
 
     .sidebar-border {
