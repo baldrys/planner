@@ -12,50 +12,44 @@
                 </a>
             </li>
         </ul>
+        <div @mousedown="borderClicked" class="sidebar-border"></div>
     </nav>
 </template>
 
 <script>
 export default {
     name: "Sidebar",
-    mounted() {
-        this.resizeRightBorder('sidebar')
+    data() {
+        return {
+            sizeToHide: 150,
+            minSidebarWidth: 2
+        }
     },
     methods:{
-        resizeRightBorder(elem) {
-            const SIZE_TO_HIDE = 200;
-            const HIDDEN_BORDER_WIDTH = 2;
-            const elementInDom = document.getElementsByClassName(elem)[0];
-            const nav = elementInDom.firstChild;
-            let borderDiv = document.createElement("div");
-            borderDiv.className = "sidebar-border";
-            const mouseUp = function(e) {
-                document.removeEventListener("mousemove", mouseMove);
-                window.removeEventListener("mouseup", mouseUp);
-                const resizedWidth = e.clientX - elementInDom.offsetLeft;
-                if(resizedWidth <= SIZE_TO_HIDE){
-
-                    elementInDom.style.width = `${HIDDEN_BORDER_WIDTH}px`;
-                } 
-            };
-            const mouseMove = function(e) {
-                const resizedWidth = e.clientX - elementInDom.offsetLeft;
-                if(resizedWidth > SIZE_TO_HIDE && nav.style.visibility == "hidden"){
-                    nav.style.visibility = "visible";
-                } 
-                if(resizedWidth <= SIZE_TO_HIDE && nav.style.visibility != "hidden"){
-                    nav.style.visibility = "hidden";
-                } 
-                elementInDom.style.width = `${resizedWidth}px`;
-            };
-
-            borderDiv.addEventListener("mousedown", function (e) {
-                const rightBorder = (elementInDom.offsetLeft + parseInt(window.getComputedStyle(elementInDom).getPropertyValue("width")));
-                window.addEventListener("mouseup", mouseUp);
-                document.addEventListener("mousemove", mouseMove);
-            });
-            elementInDom.appendChild(borderDiv);
-
+        getSidebarElement(){
+            return document.getElementsByClassName('sidebar')[0]
+        },
+        mouseUp(e) {
+            document.removeEventListener("mousemove", this.mouseMove);
+            window.removeEventListener("mouseup", this.mouseUp);
+            const sidebar = this.getSidebarElement();
+            const resizedWidth = e.clientX - sidebar.offsetLeft;
+            const nav = sidebar.firstChild;
+            if(resizedWidth <= this.sizeToHide){
+                sidebar.style.width = `${this.minSidebarWidth}px`;  
+                nav.style.visibility = 'hidden';
+            } else
+                nav.style.visibility = 'visible';
+        },
+        borderClicked(e) {
+            window.addEventListener("mouseup", this.mouseUp);
+            document.addEventListener("mousemove", this.mouseMove);
+        },
+        mouseMove(e) {
+            const sidebar = this.getSidebarElement();
+            const resizedWidth = e.clientX - this.getSidebarElement().offsetLeft;
+            sidebar.style.width = `${resizedWidth}px`;
+            this.sideBarWidth = resizedWidth;
         },
     }
 }

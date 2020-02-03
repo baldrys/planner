@@ -1976,50 +1976,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Sidebar",
-  mounted: function mounted() {
-    this.resizeRightBorder('sidebar');
+  data: function data() {
+    return {
+      sizeToHide: 150,
+      minSidebarWidth: 2
+    };
   },
   methods: {
-    resizeRightBorder: function resizeRightBorder(elem) {
-      var SIZE_TO_HIDE = 200;
-      var HIDDEN_BORDER_WIDTH = 2;
-      var elementInDom = document.getElementsByClassName(elem)[0];
-      var nav = elementInDom.firstChild;
-      var borderDiv = document.createElement("div");
-      borderDiv.className = "sidebar-border";
+    getSidebarElement: function getSidebarElement() {
+      return document.getElementsByClassName('sidebar')[0];
+    },
+    mouseUp: function mouseUp(e) {
+      document.removeEventListener("mousemove", this.mouseMove);
+      window.removeEventListener("mouseup", this.mouseUp);
+      var sidebar = this.getSidebarElement();
+      var resizedWidth = e.clientX - sidebar.offsetLeft;
+      var nav = sidebar.firstChild;
 
-      var mouseUp = function mouseUp(e) {
-        document.removeEventListener("mousemove", mouseMove);
-        window.removeEventListener("mouseup", mouseUp);
-        var resizedWidth = e.clientX - elementInDom.offsetLeft;
-
-        if (resizedWidth <= SIZE_TO_HIDE) {
-          elementInDom.style.width = "".concat(HIDDEN_BORDER_WIDTH, "px");
-        }
-      };
-
-      var mouseMove = function mouseMove(e) {
-        var resizedWidth = e.clientX - elementInDom.offsetLeft;
-
-        if (resizedWidth > SIZE_TO_HIDE && nav.style.visibility == "hidden") {
-          nav.style.visibility = "visible";
-        }
-
-        if (resizedWidth <= SIZE_TO_HIDE && nav.style.visibility != "hidden") {
-          nav.style.visibility = "hidden";
-        }
-
-        elementInDom.style.width = "".concat(resizedWidth, "px");
-      };
-
-      borderDiv.addEventListener("mousedown", function (e) {
-        var rightBorder = elementInDom.offsetLeft + parseInt(window.getComputedStyle(elementInDom).getPropertyValue("width"));
-        window.addEventListener("mouseup", mouseUp);
-        document.addEventListener("mousemove", mouseMove);
-      });
-      elementInDom.appendChild(borderDiv);
+      if (resizedWidth <= this.sizeToHide) {
+        sidebar.style.width = "".concat(this.minSidebarWidth, "px");
+        nav.style.visibility = 'hidden';
+      } else nav.style.visibility = 'visible';
+    },
+    borderClicked: function borderClicked(e) {
+      window.addEventListener("mouseup", this.mouseUp);
+      document.addEventListener("mousemove", this.mouseMove);
+    },
+    mouseMove: function mouseMove(e) {
+      var sidebar = this.getSidebarElement();
+      var resizedWidth = e.clientX - this.getSidebarElement().offsetLeft;
+      sidebar.style.width = "".concat(resizedWidth, "px");
+      this.sideBarWidth = resizedWidth;
     }
   }
 });
@@ -4477,29 +4467,32 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("nav", { staticClass: "sidebar bg-secondary" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", {
+      staticClass: "sidebar-border",
+      on: { mousedown: _vm.borderClicked }
+    })
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("nav", { staticClass: "sidebar bg-secondary" }, [
-      _c("ul", { staticClass: "nav" }, [
-        _c("li", { staticClass: "nav-item" }, [
-          _c(
-            "a",
-            { staticClass: "nav-link active text-light", attrs: { href: "#" } },
-            [_vm._v("\n                Персональная информация\n            ")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "nav-item" }, [
-          _c(
-            "a",
-            { staticClass: "nav-link text-light", attrs: { href: "#" } },
-            [_vm._v("\n                Активности\n            ")]
-          )
+    return _c("ul", { staticClass: "nav" }, [
+      _c("li", { staticClass: "nav-item" }, [
+        _c(
+          "a",
+          { staticClass: "nav-link active text-light", attrs: { href: "#" } },
+          [_vm._v("\n                Персональная информация\n            ")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", { staticClass: "nav-item" }, [
+        _c("a", { staticClass: "nav-link text-light", attrs: { href: "#" } }, [
+          _vm._v("\n                Активности\n            ")
         ])
       ])
     ])
