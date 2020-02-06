@@ -1,18 +1,18 @@
 <template>
-    <div class="d-flex flex-column min-vh-100" >
-        <Navbar/>
-        <!-- Отборажает нужную вьюху -->
-        <router-view/>
+    <div id="app" >
+        <component :is="layout">
+            <router-view/>
+        </component>
     </div>
 </template>
 
 <script>
-    import Navbar from './components/Navbar'
-
     export default {
         name: 'app',
-        components: {
-            Navbar
+        computed: {
+            layout() {
+                return this.$route.meta.layout || 'default-layout'
+            }
         }
     }
 </script>

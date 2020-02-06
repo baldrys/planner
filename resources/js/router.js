@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import LoginFormView from './views/LoginForm'
 import RegisterFormView from './views/RegisterForm'
 import AdminView from './views/Admin'
+import PersonalInfoView from './views/PersonalInfo'
 
 Vue.use(Router)
 
@@ -15,7 +16,8 @@ const routes = [
             name: 'home',
             component: Home,
             meta: {
-                title: 'Главная страница'
+                title: 'Главная страница',
+                layout: 'default-layout'
             }
         },
         { 
@@ -25,7 +27,8 @@ const routes = [
             props: true,
             meta: {
                 title: 'Вход',
-                requiresAuth: true
+                requiresAuth: true,
+                layout: 'auth-layout'
             },
         },
         { 
@@ -33,7 +36,8 @@ const routes = [
             component: RegisterFormView, 
             name: 'RegisterForm',
             meta: {
-                title: 'Регистрация'
+                title: 'Регистрация',
+                layout: 'auth-layout'
             }, 
         },
         { 
@@ -42,6 +46,15 @@ const routes = [
             name: 'admin',
             meta: {
                 title: 'Административная панель',
+                requiresAuth: true
+            }, 
+        },
+        { 
+            path: '/personal-info', 
+            component: PersonalInfoView, 
+            name: 'personal',
+            meta: {
+                title: 'Персональная информация',
                 requiresAuth: true
             }, 
         },

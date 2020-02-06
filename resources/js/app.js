@@ -4,6 +4,11 @@ import store from './store'
 import router from './router'
 import axios from 'axios'
 import Vuelidate from 'vuelidate'
+import DefaultLayout from './layouts/Default.vue'
+import AuthLayout from './layouts/Auth.vue'
+
+Vue.component('default-layout', DefaultLayout)
+Vue.component('auth-layout', AuthLayout)
 
 Vue.use(Vuelidate)
 

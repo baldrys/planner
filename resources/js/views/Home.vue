@@ -1,21 +1,12 @@
 <template>
-    <div class="d-flex flex-grow-1">
-        <Sidebar/>
-        <main role="main" class="flex-grow-1">
-            <div class="pt-3 border-bottom">
-                <h1 class="h2">Dashboard</h1>
-            </div>
-        </main> 
+    <div class="pt-3 border-bottom">
+        <h1 class="h2">Dashboard</h1>
     </div>
 </template>
 
 <script>
-    import Sidebar from '../components/Sidebar'
     export default {
         name: "Home",
-        components: {
-            Sidebar
-        },
         created() {
             if(this.isAuthenticated){
                 this.$store.dispatch('auth/getUserInfo').then(
