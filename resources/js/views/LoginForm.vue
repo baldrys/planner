@@ -65,7 +65,6 @@
             login() {
                 if(this.$v.$invalid) {
                     this.$v.$touch();
-                    console.log("INVALID");
                     return
                 };
                 const payload = {

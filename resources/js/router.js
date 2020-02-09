@@ -46,7 +46,7 @@ const routes = [
             name: 'admin',
             meta: {
                 title: 'Административная панель',
-                requiresAuth: true
+                requiresAuth: true,
             }, 
         },
         { 
@@ -55,7 +55,8 @@ const routes = [
             name: 'personal',
             meta: {
                 title: 'Персональная информация',
-                requiresAuth: true
+                requiresAuth: true,
+                layout: 'default-layout'
             }, 
         },
     ]

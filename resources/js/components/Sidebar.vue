@@ -2,14 +2,14 @@
     <nav class="sidebar bg-secondary">
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link active text-light" href="#">
+                <router-link :to="{ name: 'personal'}" class="nav-link active text-light">
                     Персональная информация
-                </a>
+                </router-link>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-light" href="#">
+                <router-link :to="{ name: 'personal'}" class="nav-link active text-light">
                     Активности
-                </a>
+                </router-link>
             </li>
         </ul>
         <div @mousedown="borderClicked" class="sidebar-border"></div>

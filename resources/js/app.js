@@ -6,6 +6,7 @@ import axios from 'axios'
 import Vuelidate from 'vuelidate'
 import DefaultLayout from './layouts/Default.vue'
 import AuthLayout from './layouts/Auth.vue'
+import 'bootstrap';
 
 Vue.component('default-layout', DefaultLayout)
 Vue.component('auth-layout', AuthLayout)

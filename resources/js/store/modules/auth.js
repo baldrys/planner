@@ -35,6 +35,7 @@ const getDefaultState = () => {
         user: {
             id: '',
             name: '',
+            email: '',
             role: '',
         }
     }
@@ -147,6 +148,7 @@ const actions = {
             const user = {
                 id: response.data.data.id,
                 name:  response.data.data.name,
+                email: response.data.data.email,
                 role: response.data.data.role,
             };
             commit(FETCH_USER_SUCCESS, user);

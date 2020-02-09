@@ -21,11 +21,13 @@
             </ul>
 
             <ul v-if="isAuthenticated" class="navbar-nav nav-bar-right">
-                <li class="nav-item d-flex align-items-center">
-                    <i class="material-icons text-light">
-                        person_outline
-                    </i>
-                    <span class="navbar-text text-light text-light"> {{ user.name }}</span>
+                <li class="nav-item">
+                    <router-link :to="{ name: 'personal'}" class="nav-link text-light">
+                        <i class="material-icons align-middle">
+                            person_outline
+                        </i>
+                        <span class="align-middle">{{ user.name }}</span>
+                     </router-link>
                 </li>
                 <li class="nav-item">
                     <a href="#" @click="logout" class="nav-link text-light">
