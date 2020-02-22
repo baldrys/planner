@@ -1,5 +1,6 @@
 <template>
-    <div id="app" >
+    <div class="min-vh-100 d-flex flex-column">
+        <Navbar/>
         <component :is="layout">
             <router-view/>
         </component>
@@ -7,8 +8,12 @@
 </template>
 
 <script>
+    import Navbar from './components/Navbar'
     export default {
         name: 'app',
+        components: {
+            Navbar
+        },
         computed: {
             layout() {
                 return this.$route.meta.layout || 'default-layout'

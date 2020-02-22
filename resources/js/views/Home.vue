@@ -27,9 +27,6 @@
             // isAdmin() {
             //     return this.$store.getters['user/hasRole']('ROLE_ADMIN');
             // },
-            user() {
-                return this.$store.getters['auth/getUser'];
-            },
             hasError() {
                 return this.$store.getters['auth/hasError'];
             },

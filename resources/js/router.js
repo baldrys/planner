@@ -5,10 +5,8 @@ import LoginFormView from './views/LoginForm'
 import RegisterFormView from './views/RegisterForm'
 import AdminView from './views/Admin'
 import PersonalInfoView from './views/PersonalInfo'
-
+import ActivitiesView from './views/Activities'
 Vue.use(Router)
-
-
 
 const routes = [
         {
@@ -55,6 +53,16 @@ const routes = [
             name: 'personal',
             meta: {
                 title: 'Персональная информация',
+                requiresAuth: true,
+                layout: 'default-layout'
+            }, 
+        },
+        { 
+            path: '/activities', 
+            component: ActivitiesView, 
+            name: 'activities',
+            meta: {
+                title: 'Активности',
                 requiresAuth: true,
                 layout: 'default-layout'
             }, 

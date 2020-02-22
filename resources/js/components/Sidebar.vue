@@ -7,7 +7,7 @@
                 </router-link>
             </li>
             <li class="nav-item">
-                <router-link :to="{ name: 'personal'}" class="nav-link active text-light">
+                <router-link :to="{ name: 'activities'}" class="nav-link active text-light">
                     Активности
                 </router-link>
             </li>
@@ -50,6 +50,11 @@ export default {
             const resizedWidth = e.clientX - this.getSidebarElement().offsetLeft;
             sidebar.style.width = `${resizedWidth}px`;
             this.sideBarWidth = resizedWidth;
+        },
+    },
+    computed: {
+        user() {
+            return this.$store.getters['auth/getUser'];
         },
     }
 }

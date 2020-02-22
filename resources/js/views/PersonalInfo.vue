@@ -1,6 +1,6 @@
 <template>
 <div class="personal-info">
-    <div v-if="isAuthLoading" class="spinner-border personal-info__spinner"></div>
+    <div v-if="isAuthLoading || isUserLoading" class="spinner-border personal-info__spinner"></div>
         <div v-else class="p-3 border-bottom">
         <div v-if="isUserJustUpdated" class="alert alert-success" role="alert">
             Информация успешно обновлена!
@@ -122,7 +122,7 @@
                 );
             }
         },
-        mounted() {
+        created() {
             if(this.isAuthenticated){
                 this.$store.dispatch('auth/getUserInfo').then(
                     () => {
