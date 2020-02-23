@@ -1,6 +1,6 @@
 <template>
 <div class="personal-info">
-    <div v-if="isAuthLoading || isUserLoading" class="spinner-border personal-info__spinner"></div>
+    <div v-if="isAuthLoading || isUserLoading" class="spinner-border spinner"></div>
         <div v-else class="p-3 border-bottom">
         <div v-if="isUserJustUpdated" class="alert alert-success" role="alert">
             Информация успешно обновлена!
@@ -212,9 +212,4 @@
 </script>
 
 <style>
-    .personal-info__spinner{
-        position: fixed;
-        top: 50%;
-        right: 50%;
-    } 
 </style>

@@ -21,3 +21,11 @@
         }
     }
 </script>
+
+<style>
+    .spinner{
+        position: fixed;
+        top: 50%;
+        right: 50%;
+    } 
+</style>

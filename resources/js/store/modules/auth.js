@@ -100,14 +100,23 @@ const mutations = {
 };
 
 const actions = {
-    async login({ commit }, payload) {
+    async login({ commit, dispatch, getters}, payload) {
         commit(AUTHENTICATING);
         try {
             const response = await UserAuthApi.login(payload.username, payload.password);
             const token = response.data.access_token
             commit(AUTHENTICATION_SUCCESS, token);
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            localStorage.setItem('access_token', token)
+            localStorage.setItem('access_token', token);
+            dispatch('getUserInfo').then(
+                () => {
+                    if (getters['hasError']) {
+                        console.log(getters['error'])
+                    } else {
+                        localStorage.setItem('user_id', getters['getUser'].id);
+                    }
+                }
+            );
             return response.data;
         } catch (error) {
             commit(AUTHENTICATION_ERROR, error);
@@ -152,7 +161,6 @@ const actions = {
                 role: response.data.data.role,
             };
             commit(FETCH_USER_SUCCESS, user);
-            console.log(user);
             return user;
         } catch (error) {
             commit(FETCH_USER_ERROR, error);
