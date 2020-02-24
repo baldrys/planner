@@ -14,7 +14,7 @@
               </thead>
               <tbody>
                 <tr v-for="(activity, activityId) in $v.activities.$each.$iter" :key="activity.id">
-                  <th scope="row">{{ activity.id }}</th>
+                  <th scope="row">{{ parseInt(activityId) + 1 }}</th>
                   <td>
                     <input type="text" class="form-control" v-model="activity.name.$model">
                     <div class="alert alert-danger" v-if="!activity.name.required">Введите имя</div>

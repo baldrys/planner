@@ -2413,22 +2413,42 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Home",
   created: function created() {
     var _this = this;
 
-    if (this.isAuthenticated) {
-      this.$store.dispatch('auth/getUserInfo').then(function () {
-        if (_this.hasError) {
-          console.log(_this.error);
-        }
-      });
-    } else {
-      this.$router.push({
-        name: "LoginForm"
-      });
-    }
+    // получаем сегодняющню дату
+    var todayDate = this.getTodayDate();
+    this.$store.dispatch('dayActivities/fetchActivities', {
+      startDate: todayDate,
+      endDate: todayDate
+    }).then(function () {
+      if (_this.hasError) {
+        console.log(_this.error);
+      }
+    });
   },
   computed: {
     isAuthenticated: function isAuthenticated() {
@@ -2438,13 +2458,52 @@ __webpack_require__.r(__webpack_exports__);
     //     return this.$store.getters['user/hasRole']('ROLE_ADMIN');
     // },
     hasError: function hasError() {
-      return this.$store.getters['auth/hasError'];
+      return this.$store.getters['dayActivities/hasError'];
     },
     error: function error() {
-      return this.$store.getters['auth/error'];
+      return this.$store.getters['dayActivities/error'];
     },
-    isLoading: function isLoading() {
-      return this.$store.getters['auth/isLoading'];
+    dayActivites: function dayActivites() {
+      return this.$store.getters['dayActivities/getDayActivities'];
+    },
+    isDayActivitiesLoading: function isDayActivitiesLoading() {
+      return this.$store.getters['dayActivities/isDayActivitiesLoading'];
+    },
+    isDayActivityUpdating: function isDayActivityUpdating() {
+      return this.$store.getters['dayActivities/isDayActivityUpdating'];
+    }
+  },
+  methods: {
+    getTodayDate: function getTodayDate() {
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0');
+      var yyyy = today.getFullYear();
+      return "".concat(yyyy, "-").concat(mm, "-").concat(dd);
+    },
+    activityDone: function activityDone(id) {
+      var _this2 = this;
+
+      this.$store.dispatch('dayActivities/updateDayActivity', {
+        isDone: 1,
+        id: id
+      }).then(function () {
+        if (_this2.hasError) {
+          console.log(_this2.error);
+        }
+      });
+    },
+    activityUndo: function activityUndo(id) {
+      var _this3 = this;
+
+      this.$store.dispatch('dayActivities/updateDayActivity', {
+        isDone: 0,
+        id: id
+      }).then(function () {
+        if (_this3.hasError) {
+          console.log(_this3.error);
+        }
+      });
     }
   }
 });
@@ -22943,7 +23002,7 @@ var render = function() {
             ) {
               return _c("tr", { key: activity.id }, [
                 _c("th", { attrs: { scope: "row" } }, [
-                  _vm._v(_vm._s(activity.id))
+                  _vm._v(_vm._s(parseInt(activityId) + 1))
                 ]),
                 _vm._v(" "),
                 _c("td", [
@@ -23299,15 +23358,95 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "pt-3 border-bottom" }, [
+      _c("h1", { staticClass: "h2" }, [
+        _vm._v("Список активностей на сегодня")
+      ]),
+      _vm._v(" "),
+      _c("table", { staticClass: "table" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.dayActivites, function(dayActivity, dayActivityId) {
+            return _c("tr", { key: dayActivity.id }, [
+              _c("th", { attrs: { scope: "row" } }, [
+                _vm._v(_vm._s(parseInt(dayActivityId) + 1))
+              ]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(dayActivity.name))]),
+              _vm._v(" "),
+              dayActivity.day_activities[0].is_free_day
+                ? _c("td", { staticClass: "d-flex" }, [
+                    _c(
+                      "div",
+                      { staticClass: "mb-0 mr-1 alert alert-warning" },
+                      [_vm._v("Выходной")]
+                    )
+                  ])
+                : !dayActivity.day_activities[0].is_done
+                ? _c("td", { staticClass: "d-flex" }, [
+                    _c("div", { staticClass: "mb-0 mr-1 alert alert-danger" }, [
+                      _vm._v("Не сделано")
+                    ]),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-success btn-sm",
+                        on: {
+                          click: function($event) {
+                            return _vm.activityDone(
+                              dayActivity.day_activities[0].id
+                            )
+                          }
+                        }
+                      },
+                      [_vm._v("Готово!")]
+                    )
+                  ])
+                : _c("td", { staticClass: "d-flex" }, [
+                    _c(
+                      "div",
+                      { staticClass: "mb-0 mr-1 alert alert-success" },
+                      [_vm._v("Уже сделано!")]
+                    ),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger btn-sm",
+                        on: {
+                          click: function($event) {
+                            return _vm.activityUndo(
+                              dayActivity.day_activities[0].id
+                            )
+                          }
+                        }
+                      },
+                      [_vm._v("Отменить")]
+                    )
+                  ])
+            ])
+          }),
+          0
+        )
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "pt-3 border-bottom" }, [
-      _c("h1", { staticClass: "h2" }, [_vm._v("Dashboard")])
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Активность")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Статус")])
+      ])
     ])
   }
 ]
@@ -42126,6 +42265,38 @@ var ACTIVITIES_URL = "/api/users/".concat(userId, "/activities");
 
 /***/ }),
 
+/***/ "./resources/js/api/DayActivities.js":
+/*!*******************************************!*\
+  !*** ./resources/js/api/DayActivities.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+var userId = localStorage.getItem('user_id');
+var DAY_ACTIVITIES_URL = "/api/users/".concat(userId, "/day-activities");
+/* harmony default export */ __webpack_exports__["default"] = ({
+  fetchDayActivities: function fetchDayActivities(dates) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(DAY_ACTIVITIES_URL, {
+      params: {
+        start_date: dates.startDate,
+        end_date: dates.endDate
+      }
+    });
+  },
+  updateDayActivity: function updateDayActivity(dayActivity) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch(DAY_ACTIVITIES_URL + "/" + dayActivity.id, {
+      is_done: dayActivity.isDone
+    });
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/api/User.js":
 /*!**********************************!*\
   !*** ./resources/js/api/User.js ***!
@@ -42738,6 +42909,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/auth */ "./resources/js/store/modules/auth.js");
 /* harmony import */ var _modules_users__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/users */ "./resources/js/store/modules/users.js");
 /* harmony import */ var _modules_activities__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/activities */ "./resources/js/store/modules/activities.js");
+/* harmony import */ var _modules_dayActivities__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/dayActivities */ "./resources/js/store/modules/dayActivities.js");
+
 
 
 
@@ -42748,7 +42921,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
   modules: {
     auth: _modules_auth__WEBPACK_IMPORTED_MODULE_2__["default"],
     user: _modules_users__WEBPACK_IMPORTED_MODULE_3__["default"],
-    activities: _modules_activities__WEBPACK_IMPORTED_MODULE_4__["default"]
+    activities: _modules_activities__WEBPACK_IMPORTED_MODULE_4__["default"],
+    dayActivities: _modules_dayActivities__WEBPACK_IMPORTED_MODULE_5__["default"]
   }
 }));
 
@@ -43267,6 +43441,161 @@ var getters = {
   },
   getUser: function getUser(state) {
     return state.user;
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: getDefaultState(),
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/dayActivities.js":
+/*!*****************************************************!*\
+  !*** ./resources/js/store/modules/dayActivities.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _api_DayActivities__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../api/DayActivities */ "./resources/js/api/DayActivities.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+
+
+var _mutations;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+var FETCHING_DAY_ACTIVITIES = "FETCHING_DAY_ACTIVITIES";
+var FETCHING_DAY_ACTIVITIES_SUCCESS = "FETCHING_DAY_ACTIVITIES_SUCCESS";
+var FETCHING_DAY_ACTIVITIES_ERROR = "FETCHING_DAY_ACTIVITIES_ERROR";
+var UPDATING_DAY_ACTIVITY = "UPDATING_DAY_ACTIVITY";
+var UPDATING_DAY_ACTIVITY_SUCCESS = "UPDATING_DAY_ACTIVITY_SUCCESS";
+var UPDATING_DAY_ACTIVITY_ERROR = "UPDATING_DAY_ACTIVITY_ERROR";
+
+var getDefaultState = function getDefaultState() {
+  return {
+    dayActivities: [],
+    error: null,
+    isDayActivitiesLoading: false,
+    isDayActivityUpdating: false
+  };
+};
+
+var mutations = (_mutations = {}, _defineProperty(_mutations, FETCHING_DAY_ACTIVITIES, function (state) {
+  state.isActivitiesLoading = true;
+  state.error = null;
+}), _defineProperty(_mutations, FETCHING_DAY_ACTIVITIES_SUCCESS, function (state, dayActivities) {
+  state.error = null;
+  state.isActivitiesLoading = false;
+  state.dayActivities = dayActivities;
+}), _defineProperty(_mutations, FETCHING_DAY_ACTIVITIES_ERROR, function (state, error) {
+  state.error = error;
+  state.isActivitiesLoading = false;
+}), _defineProperty(_mutations, UPDATING_DAY_ACTIVITY, function (state) {
+  state.isDayActivityUpdating = true;
+  state.error = null;
+}), _defineProperty(_mutations, UPDATING_DAY_ACTIVITY_SUCCESS, function (state, updatedDayActivity) {
+  state.error = null;
+  state.isDayActivityUpdating = false;
+  state.dayActivities.forEach(function (activity) {
+    if (activity.day_activities[0].id == updatedDayActivity.id) {
+      activity.day_activities[0].is_done = updatedDayActivity.is_done;
+    }
+  });
+}), _defineProperty(_mutations, UPDATING_DAY_ACTIVITY_ERROR, function (state, error) {
+  state.error = error;
+  state.isDayActivityUpdating = false;
+}), _mutations);
+var actions = {
+  fetchActivities: function fetchActivities(_ref, payload) {
+    var commit, response, dayActivities;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function fetchActivities$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            commit = _ref.commit;
+            commit(FETCHING_DAY_ACTIVITIES);
+            _context.prev = 2;
+            _context.next = 5;
+            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(_api_DayActivities__WEBPACK_IMPORTED_MODULE_1__["default"].fetchDayActivities(payload));
+
+          case 5:
+            response = _context.sent;
+            dayActivities = response.data.data.activities;
+            console.log(dayActivities);
+            commit(FETCHING_DAY_ACTIVITIES_SUCCESS, dayActivities);
+            return _context.abrupt("return", dayActivities);
+
+          case 12:
+            _context.prev = 12;
+            _context.t0 = _context["catch"](2);
+            commit(FETCHING_DAY_ACTIVITIES_ERROR, _context.t0);
+            return _context.abrupt("return", null);
+
+          case 16:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, null, null, [[2, 12]]);
+  },
+  updateDayActivity: function updateDayActivity(_ref2, payload) {
+    var commit, response, updatedDayActivity;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function updateDayActivity$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            commit = _ref2.commit;
+            commit(UPDATING_DAY_ACTIVITY);
+            _context2.prev = 2;
+            _context2.next = 5;
+            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(_api_DayActivities__WEBPACK_IMPORTED_MODULE_1__["default"].updateDayActivity(payload));
+
+          case 5:
+            response = _context2.sent;
+            updatedDayActivity = response.data.data;
+            commit(UPDATING_DAY_ACTIVITY_SUCCESS, updatedDayActivity);
+            return _context2.abrupt("return", updatedDayActivity);
+
+          case 11:
+            _context2.prev = 11;
+            _context2.t0 = _context2["catch"](2);
+            commit(UPDATING_DAY_ACTIVITY_ERROR, _context2.t0);
+            return _context2.abrupt("return", null);
+
+          case 15:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, null, null, [[2, 11]]);
+  }
+};
+var getters = {
+  hasError: function hasError(state) {
+    return state.error !== null;
+  },
+  error: function error(state) {
+    return state.error;
+  },
+  isDayActivitiesLoading: function isDayActivitiesLoading(state) {
+    return state.isDayActivitiesLoading;
+  },
+  isDayActivityUpdating: function isDayActivityUpdating(state) {
+    return state.isDayActivityUpdating;
+  },
+  getDayActivities: function getDayActivities(state) {
+    return state.dayActivities;
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
