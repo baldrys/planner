@@ -2434,7 +2434,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      dayActivityActed: {
+        id: ''
+      }
+    };
+  },
   name: "Home",
   created: function created() {
     var _this = this;
@@ -2484,6 +2506,7 @@ __webpack_require__.r(__webpack_exports__);
     activityDone: function activityDone(id) {
       var _this2 = this;
 
+      this.dayActivityActed.id = id;
       this.$store.dispatch('dayActivities/updateDayActivity', {
         isDone: 1,
         id: id
@@ -2496,6 +2519,7 @@ __webpack_require__.r(__webpack_exports__);
     activityUndo: function activityUndo(id) {
       var _this3 = this;
 
+      this.dayActivityActed.id = id;
       this.$store.dispatch('dayActivities/updateDayActivity', {
         isDone: 0,
         id: id
@@ -23364,6 +23388,10 @@ var render = function() {
         _vm._v("Список активностей на сегодня")
       ]),
       _vm._v(" "),
+      _vm.isDayActivitiesLoading
+        ? _c("div", { staticClass: "spinner-border spinner" })
+        : _vm._e(),
+      _vm._v(" "),
       _c("table", { staticClass: "table" }, [
         _vm._m(0),
         _vm._v(" "),
@@ -23390,6 +23418,7 @@ var render = function() {
                     _c("div", { staticClass: "mb-0 mr-1 alert alert-danger" }, [
                       _vm._v("Не сделано")
                     ]),
+                    _vm._v(" "),
                     _c(
                       "button",
                       {
@@ -23402,15 +23431,32 @@ var render = function() {
                           }
                         }
                       },
-                      [_vm._v("Готово!")]
+                      [
+                        _vm.isDayActivityUpdating &&
+                        _vm.dayActivityActed.id ==
+                          dayActivity.day_activities[0].id
+                          ? _c("span", {
+                              staticClass: "spinner-border spinner-border-sm",
+                              attrs: { role: "status", "aria-hidden": "true" }
+                            })
+                          : _vm._e(),
+                        _vm._v(
+                          "\n                            Готово!\n                        "
+                        )
+                      ]
                     )
                   ])
                 : _c("td", { staticClass: "d-flex" }, [
                     _c(
                       "div",
                       { staticClass: "mb-0 mr-1 alert alert-success" },
-                      [_vm._v("Уже сделано!")]
+                      [
+                        _vm._v(
+                          "\n                            Уже сделано!\n                        "
+                        )
+                      ]
                     ),
+                    _vm._v(" "),
                     _c(
                       "button",
                       {
@@ -23423,7 +23469,19 @@ var render = function() {
                           }
                         }
                       },
-                      [_vm._v("Отменить")]
+                      [
+                        _vm.isDayActivityUpdating &&
+                        _vm.dayActivityActed.id ==
+                          dayActivity.day_activities[0].id
+                          ? _c("span", {
+                              staticClass: "spinner-border spinner-border-sm",
+                              attrs: { role: "status", "aria-hidden": "true" }
+                            })
+                          : _vm._e(),
+                        _vm._v(
+                          "\n                            Отменить\n                        "
+                        )
+                      ]
                     )
                   ])
             ])
@@ -23445,7 +23503,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Активность")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Статус")])
+        _c("th", { staticClass: "w-50", attrs: { scope: "col" } }, [
+          _vm._v("Статус")
+        ])
       ])
     ])
   }
@@ -43492,15 +43552,15 @@ var getDefaultState = function getDefaultState() {
 };
 
 var mutations = (_mutations = {}, _defineProperty(_mutations, FETCHING_DAY_ACTIVITIES, function (state) {
-  state.isActivitiesLoading = true;
+  state.isDayActivitiesLoading = true;
   state.error = null;
 }), _defineProperty(_mutations, FETCHING_DAY_ACTIVITIES_SUCCESS, function (state, dayActivities) {
   state.error = null;
-  state.isActivitiesLoading = false;
+  state.isDayActivitiesLoading = false;
   state.dayActivities = dayActivities;
 }), _defineProperty(_mutations, FETCHING_DAY_ACTIVITIES_ERROR, function (state, error) {
   state.error = error;
-  state.isActivitiesLoading = false;
+  state.isDayActivitiesLoading = false;
 }), _defineProperty(_mutations, UPDATING_DAY_ACTIVITY, function (state) {
   state.isDayActivityUpdating = true;
   state.error = null;

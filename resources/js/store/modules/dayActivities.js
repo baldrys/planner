@@ -20,17 +20,17 @@ const getDefaultState = () => {
 
 const mutations = {
     [FETCHING_DAY_ACTIVITIES](state) {
-        state.isActivitiesLoading = true;
+        state.isDayActivitiesLoading = true;
         state.error = null;
     },
     [FETCHING_DAY_ACTIVITIES_SUCCESS](state, dayActivities) {
         state.error = null;
-        state.isActivitiesLoading = false;
+        state.isDayActivitiesLoading = false;
         state.dayActivities = dayActivities
     },
     [FETCHING_DAY_ACTIVITIES_ERROR](state, error) {
         state.error = error;
-        state.isActivitiesLoading = false
+        state.isDayActivitiesLoading = false
     },
     [UPDATING_DAY_ACTIVITY](state) {
         state.isDayActivityUpdating = true;
