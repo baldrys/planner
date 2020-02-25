@@ -1,6 +1,6 @@
 <template>
     <nav class="sidebar bg-secondary">
-        <ul class="nav">
+        <ul class="nav d-flex flex-column">
             <li class="nav-item">
                 <router-link :to="{ name: 'personal'}" class="nav-link active text-light">
                     Персональная информация
@@ -9,6 +9,11 @@
             <li class="nav-item">
                 <router-link :to="{ name: 'activities'}" class="nav-link active text-light">
                     Активности
+                </router-link>
+            </li>
+            <li class="nav-item">
+                <router-link :to="{ name: 'history'}" class="nav-link active text-light">
+                    История
                 </router-link>
             </li>
         </ul>

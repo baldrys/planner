@@ -6,6 +6,7 @@ import RegisterFormView from './views/RegisterForm'
 import AdminView from './views/Admin'
 import PersonalInfoView from './views/PersonalInfo'
 import ActivitiesView from './views/Activities'
+import HistoryView from './views/History'
 Vue.use(Router)
 
 const routes = [
@@ -63,6 +64,16 @@ const routes = [
             name: 'activities',
             meta: {
                 title: 'Активности',
+                requiresAuth: true,
+                layout: 'default-layout'
+            }, 
+        },
+        { 
+            path: '/history', 
+            component: HistoryView, 
+            name: 'history',
+            meta: {
+                title: 'История',
                 requiresAuth: true,
                 layout: 'default-layout'
             }, 

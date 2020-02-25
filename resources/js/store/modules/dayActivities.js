@@ -57,7 +57,6 @@ const actions = {
         try {
             const response = await DayActivitiesApi.fetchDayActivities(payload);
             const dayActivities = response.data.data.activities;
-            console.log(dayActivities);
             commit(FETCHING_DAY_ACTIVITIES_SUCCESS, dayActivities);
             return dayActivities;
         } catch (error) {

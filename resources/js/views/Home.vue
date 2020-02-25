@@ -3,7 +3,7 @@
         <div class="pt-3 border-bottom">
             <h1 class="h2">Список активностей на сегодня</h1>
             <div v-if="isDayActivitiesLoading" class="spinner-border spinner"></div>
-            <table class="table">
+            <table v-else class="table">
                 <thead>
                     <tr>
                     <th scope="col">#</th>
@@ -25,7 +25,7 @@
                         </td>
                         <td v-else class="d-flex">
                             <div class="mb-0 mr-1 alert alert-success">
-                                Уже сделано!
+                            Уже сделано!
                             </div>
                             <button @click="activityUndo(dayActivity.day_activities[0].id)" class="btn btn-danger btn-sm">
                                 <span v-if="isDayActivityUpdating && dayActivityActed.id == dayActivity.day_activities[0].id" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -103,7 +103,6 @@
                 );
             },
             activityUndo(id) {
-                this.dayActivityActed.id = id;
                 this.$store.dispatch('dayActivities/updateDayActivity', {isDone: 0, id: id}).then(
                     () => {
                         if (this.hasError) {
