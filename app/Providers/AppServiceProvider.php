@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Services\DayActivityService;
+use App\User;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +15,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        config(['app.locale' => 'ru']);
+        \Carbon\Carbon::setLocale('ru');
+
+        // $this->app->bind(DayActivityService::class,function($app){
+        //     return new DayActivityService()
+        // })
     }
 
     /**
