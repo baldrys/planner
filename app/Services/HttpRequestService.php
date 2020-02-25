@@ -23,7 +23,6 @@ class HttpRequestService{
             );
             $response = app()->handle($tokenRequest);
             $statusCode = $response->status();
-            dd($response);
             if ($statusCode !== Response::HTTP_OK ) {
                 if ($statusCode === Response::HTTP_BAD_REQUEST) {
                     throw new HttpException($statusCode, 'Invalid Request. Please enter a username or a password.');
