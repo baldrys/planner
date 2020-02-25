@@ -7,6 +7,7 @@ import AdminView from './views/Admin'
 import PersonalInfoView from './views/PersonalInfo'
 import ActivitiesView from './views/Activities'
 import HistoryView from './views/History'
+import store from './store'
 Vue.use(Router)
 
 const DEFAULT_TITLE = 'Ежедненые активности';
@@ -18,6 +19,7 @@ const routes = [
             component: Home,
             meta: {
                 title: 'Главная страница',
+                requiresAuth: true,
                 layout: 'default-layout'
             }
         },
@@ -28,7 +30,6 @@ const routes = [
             props: true,
             meta: {
                 title: 'Вход',
-                requiresAuth: true,
                 layout: 'auth-layout'
             },
         },
@@ -38,6 +39,7 @@ const routes = [
             name: 'RegisterForm',
             meta: {
                 title: 'Регистрация',
+                requiresAuth: false,
                 layout: 'auth-layout'
             }, 
         },
@@ -89,10 +91,7 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        // this route requires auth, check if logged in
-        // if not, redirect to login page.
-        this.$store.dispatch('auth/resetAuthState');
-        if (store.getters["security/isAuthenticated"]) {
+        if (store.getters["auth/isAuthenticated"]) {
             next();
         } else {
             next({
@@ -106,7 +105,4 @@ router.beforeEach((to, from, next) => {
 
 });
 
-export default new Router({
-    mode: 'history',
-    routes: routes
-})
+export default router;

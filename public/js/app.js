@@ -1934,51 +1934,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  data: function data() {
-    return {
-      userNav: {
-        name: '',
-        email: ''
-      }
-    };
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    if (this.isAuthenticated) {
-      this.$store.dispatch('auth/getUserInfo').then(function () {
-        if (_this.hasError) {
-          console.log(_this.error);
-        } else {
-          var userFromStore = _this.$store.getters['auth/getUser'];
-          _this.userNav = {
-            name: userFromStore.name,
-            email: userFromStore.email
-          };
-        }
-      });
-    } else {
-      this.$router.push({
-        name: "LoginForm"
-      });
-    }
-  },
   computed: {
     isAuthenticated: function isAuthenticated() {
       return this.$store.getters['auth/isAuthenticated'];
+    },
+    userFromStore: function userFromStore() {
+      return this.$store.getters['auth/getUser'];
     }
   },
   methods: {
     logout: function logout() {
-      var _this2 = this;
+      var _this = this;
 
       this.$store.dispatch('auth/logout').then(function () {
-        if (!_this2.hasError) {
-          _this2.$router.push({
+        if (!_this.hasError) {
+          _this.$router.push({
             name: "LoginForm"
           });
         } else {
-          if (!_this2.hasError) console.log(_this2.error);
+          if (!_this.hasError) console.log(_this.error);
         }
       });
     }
@@ -40037,7 +40011,7 @@ var render = function() {
                         ),
                         _vm._v(" "),
                         _c("span", { staticClass: "align-middle" }, [
-                          _vm._v(_vm._s(_vm.userNav.name))
+                          _vm._v(_vm._s(_vm.userFromStore.name))
                         ])
                       ]
                     )
@@ -64446,7 +64420,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _views_PersonalInfo__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./views/PersonalInfo */ "./resources/js/views/PersonalInfo.vue");
 /* harmony import */ var _views_Activities__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./views/Activities */ "./resources/js/views/Activities.vue");
 /* harmony import */ var _views_History__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./views/History */ "./resources/js/views/History.vue");
-var _this = undefined;
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./store */ "./resources/js/store/index.js");
 
 
 
@@ -64465,6 +64439,7 @@ var routes = [{
   component: _views_Home_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
   meta: {
     title: 'Главная страница',
+    requiresAuth: true,
     layout: 'default-layout'
   }
 }, {
@@ -64474,7 +64449,6 @@ var routes = [{
   props: true,
   meta: {
     title: 'Вход',
-    requiresAuth: true,
     layout: 'auth-layout'
   }
 }, {
@@ -64483,6 +64457,7 @@ var routes = [{
   name: 'RegisterForm',
   meta: {
     title: 'Регистрация',
+    requiresAuth: false,
     layout: 'auth-layout'
   }
 }, {
@@ -64529,11 +64504,7 @@ router.beforeEach(function (to, from, next) {
   if (to.matched.some(function (record) {
     return record.meta.requiresAuth;
   })) {
-    // this route requires auth, check if logged in
-    // if not, redirect to login page.
-    _this.$store.dispatch('auth/resetAuthState');
-
-    if (store.getters["security/isAuthenticated"]) {
+    if (_store__WEBPACK_IMPORTED_MODULE_9__["default"].getters["auth/isAuthenticated"]) {
       next();
     } else {
       next({
@@ -64547,10 +64518,7 @@ router.beforeEach(function (to, from, next) {
     next(); // make sure to always call next()!
   }
 });
-/* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
-  mode: 'history',
-  routes: routes
-}));
+/* harmony default export */ __webpack_exports__["default"] = (router);
 
 /***/ }),
 
@@ -64960,6 +64928,7 @@ var actions = {
             dispatch('getUserInfo').then(function () {
               if (getters['hasError']) {
                 console.log(getters['error']);
+                console.log('AAHAHAHAHA');
               } else {
                 localStorage.setItem('user_id', getters['getUser'].id);
               }

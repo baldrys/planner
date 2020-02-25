@@ -112,6 +112,7 @@ const actions = {
                 () => {
                     if (getters['hasError']) {
                         console.log(getters['error'])
+                        console.log('AAHAHAHAHA');
                     } else {
                         localStorage.setItem('user_id', getters['getUser'].id);
                     }

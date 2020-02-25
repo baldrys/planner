@@ -26,7 +26,7 @@
                         <i class="material-icons align-middle">
                             person_outline
                         </i>
-                        <span class="align-middle">{{ userNav.name }}</span>
+                        <span class="align-middle">{{ userFromStore.name }}</span>
                      </router-link>
                 </li>
                 <li class="nav-item">
@@ -41,38 +41,13 @@
 
 <script>
 export default {
-    data() {
-        return {
-            userNav: {
-                name: '',
-                email: ''
-            }
-        }
-    },
-    mounted() {
-        if(this.isAuthenticated){
-            this.$store.dispatch('auth/getUserInfo').then(
-                () => {
-                    if (this.hasError) {
-                        console.log(this.error)
-                    } else {
-                        const userFromStore = this.$store.getters['auth/getUser'];
-                        this.userNav = {
-                            name: userFromStore.name,
-                            email: userFromStore.email,
-                        }
-
-                    }
-                }
-            );
-        } else {
-            this.$router.push({ name: "LoginForm"});
-        }
-    },
     computed: {
         isAuthenticated() {
             return this.$store.getters['auth/isAuthenticated'];
         },
+        userFromStore(){
+            return this.$store.getters['auth/getUser'];
+        } 
     },
     methods: {
         logout(){
