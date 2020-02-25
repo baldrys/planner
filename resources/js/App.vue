@@ -18,6 +18,14 @@
             layout() {
                 return this.$route.meta.layout || 'default-layout'
             }
+        },
+        watch: {
+            $route: {
+                immediate: true,
+                handler(to, from) {
+                    document.title = to.meta.title || 'Some Default Title';
+                }
+            },
         }
     }
 </script>

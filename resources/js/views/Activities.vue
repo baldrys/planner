@@ -102,7 +102,6 @@ export default {
       return this.$store.getters['activities/getActivities'];
     },
     activitiesChanged() {
-      console.log('activitiesChanged');
       return this.activities.map((activity, i) => {
           if(this.activitiesFromStore[i] &&  activity.name == this.activitiesFromStore[i].name && activity.activity_period == this.activitiesFromStore[i].activity_period)
             return false;

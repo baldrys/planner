@@ -1870,6 +1870,14 @@ __webpack_require__.r(__webpack_exports__);
     layout: function layout() {
       return this.$route.meta.layout || 'default-layout';
     }
+  },
+  watch: {
+    $route: {
+      immediate: true,
+      handler: function handler(to, from) {
+        document.title = to.meta.title || 'Some Default Title';
+      }
+    }
   }
 });
 
@@ -1942,7 +1950,6 @@ __webpack_require__.r(__webpack_exports__);
         if (_this.hasError) {
           console.log(_this.error);
         } else {
-          console.log("hello from navbar");
           var userFromStore = _this.$store.getters['auth/getUser'];
           _this.userNav = {
             name: userFromStore.name,
@@ -2257,7 +2264,6 @@ __webpack_require__.r(__webpack_exports__);
     activitiesChanged: function activitiesChanged() {
       var _this2 = this;
 
-      console.log('activitiesChanged');
       return this.activities.map(function (activity, i) {
         if (_this2.activitiesFromStore[i] && activity.name == _this2.activitiesFromStore[i].name && activity.activity_period == _this2.activitiesFromStore[i].activity_period) return false;else return true;
       });
@@ -64452,6 +64458,7 @@ var _this = undefined;
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
+var DEFAULT_TITLE = 'Ежедненые активности';
 var routes = [{
   path: '/',
   name: 'home',

@@ -9,6 +9,8 @@ import ActivitiesView from './views/Activities'
 import HistoryView from './views/History'
 Vue.use(Router)
 
+const DEFAULT_TITLE = 'Ежедненые активности';
+
 const routes = [
         {
             path: '/',
@@ -101,6 +103,7 @@ router.beforeEach((to, from, next) => {
     } else {
         next(); // make sure to always call next()!
     }
+
 });
 
 export default new Router({

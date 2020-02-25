@@ -56,7 +56,6 @@ export default {
                     if (this.hasError) {
                         console.log(this.error)
                     } else {
-                        console.log("hello from navbar")
                         const userFromStore = this.$store.getters['auth/getUser'];
                         this.userNav = {
                             name: userFromStore.name,
