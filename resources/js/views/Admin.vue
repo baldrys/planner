@@ -14,9 +14,6 @@
 <script>
     export default {
         name: "Home",
-        // mounted() {
-        //     this.$store.dispatch('auth/getUserInfo')
-        // },
         computed: {
             isAuthenticated() {
                 return this.$store.getters['auth/isAuthenticated'];

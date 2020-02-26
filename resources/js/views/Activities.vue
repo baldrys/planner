@@ -189,7 +189,7 @@ export default {
         activity_period: {
           required,
           integer,
-          minValue: minValue(1)
+          minValue: minValue(0)
         }
       }
     },
@@ -200,7 +200,7 @@ export default {
       period: {
         required,
         integer,
-        minValue: minValue(1)}
+        minValue: minValue(0)}
     }
   }
 }

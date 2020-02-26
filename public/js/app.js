@@ -2336,7 +2336,7 @@ __webpack_require__.r(__webpack_exports__);
         activity_period: {
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
           integer: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["integer"],
-          minValue: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minValue"])(1)
+          minValue: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minValue"])(0)
         }
       }
     },
@@ -2347,7 +2347,7 @@ __webpack_require__.r(__webpack_exports__);
       period: {
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
         integer: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["integer"],
-        minValue: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minValue"])(1)
+        minValue: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minValue"])(0)
       }
     }
   }
@@ -2379,9 +2379,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Home",
-  // mounted() {
-  //     this.$store.dispatch('auth/getUserInfo')
-  // },
   computed: {
     isAuthenticated: function isAuthenticated() {
       return this.$store.getters['auth/isAuthenticated'];
