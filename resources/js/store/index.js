@@ -7,7 +7,11 @@ import dayActivities from './modules/dayActivities'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+
+
+
+
+let store = new Vuex.Store({
     modules: {
         auth,
         user,
@@ -15,3 +19,17 @@ export default new Vuex.Store({
         dayActivities
     }
 })
+
+store.watch((state) => store.getters['auth/isAuthenticated'], (newValue, oldValue) => {
+    if(newValue === true) {
+        store.dispatch('auth/getUserInfo').then(
+            () => {
+                if (store.getters['auth/hasError']) {
+                    console.log(this.error)
+                }
+            }
+        );
+    }
+})
+
+export default store;

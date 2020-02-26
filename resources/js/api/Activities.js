@@ -1,19 +1,23 @@
 import axios from 'axios';
 
-const userId = localStorage.getItem('user_id');
-const ACTIVITIES_URL = `/api/users/${userId}/activities`;
+
 
 export default {
+    getUrl() {
+        const userId = localStorage.getItem('user_id');
+        return `/api/users/${userId}/activities`;
+    },
     fetchActivities() {
-        return axios.get( ACTIVITIES_URL);
+
+        return axios.get( this.getUrl());
     },
     updateActivity(activity) {
-        return axios.patch( ACTIVITIES_URL + "/" + activity.id, {name: activity.name, activity_period:activity.activity_period});
+        return axios.patch( this.getUrl() + "/" + activity.id, {name: activity.name, activity_period:activity.activity_period});
     },
     deleteActivity(activity) {
-        return axios.delete( ACTIVITIES_URL + "/" + activity.id);
+        return axios.delete( this.getUrl() + "/" + activity.id);
     },
     addActivity(activity) {
-        return axios.post( ACTIVITIES_URL, {name: activity.name , activity_period: activity.period});
+        return axios.post( this.getUrl(), {name: activity.name , activity_period: activity.period});
     }
 };

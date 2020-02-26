@@ -1,17 +1,19 @@
 import axios from 'axios';
 
-const userId = localStorage.getItem('user_id');
-const DAY_ACTIVITIES_URL = `/api/users/${userId}/day-activities`;
 
 export default {
+    getUrl() {
+        const userId = localStorage.getItem('user_id');
+        return `/api/users/${userId}/day-activities`;
+    },
     fetchDayActivities(dates) {
-        return axios.get(DAY_ACTIVITIES_URL, {
+        return axios.get(this.getUrl(), {
             params: {
                 start_date: dates.startDate, end_date: dates.endDate
             }
         })
     },
     updateDayActivity(dayActivity) {
-        return axios.patch( DAY_ACTIVITIES_URL + "/" + dayActivity.id, {is_done: dayActivity.isDone});
+        return axios.patch(this.getUrl() + "/" + dayActivity.id, {is_done: dayActivity.isDone});
     }
 };

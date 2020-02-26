@@ -20,13 +20,13 @@
                 </li>
             </ul>
 
-            <ul v-if="isAuthenticated" class="navbar-nav nav-bar-right">
+            <ul v-if="isAuthenticated && !isLoading" class="navbar-nav nav-bar-right">
                 <li class="nav-item">
                     <router-link :to="{ name: 'personal'}" class="nav-link text-light">
                         <i class="material-icons align-middle">
                             person_outline
                         </i>
-                        <span class="align-middle">{{ userFromStore.name }}</span>
+                        <span class="align-middle">{{ user.name }}</span>
                      </router-link>
                 </li>
                 <li class="nav-item">
@@ -45,8 +45,11 @@ export default {
         isAuthenticated() {
             return this.$store.getters['auth/isAuthenticated'];
         },
-        userFromStore(){
+        user(){
             return this.$store.getters['auth/getUser'];
+        },
+        isLoading(){
+            return this.$store.getters['auth/isLoading'];
         } 
     },
     mounted() {
@@ -58,8 +61,6 @@ export default {
                     }
                 }
             );
-        } else {
-            this.$router.push({ name: "LoginForm"});
         }
     },
     methods: {

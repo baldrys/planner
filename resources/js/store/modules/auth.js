@@ -46,10 +46,11 @@ const mutations = {
         state.isLoading = true;
         state.error = null;
     },
-    [AUTHENTICATION_SUCCESS](state, token) {
+    [AUTHENTICATION_SUCCESS](state, token, user) {
         state.error = null;
         state.isLoading = false;
-        state.token = token
+        state.token = token;
+        state.user = user
     },
     [AUTHENTICATION_ERROR](state, error) {
         state.error = error;
@@ -78,7 +79,13 @@ const mutations = {
     [LOGOUT_SUCCESS](state) {
         state.error = null;
         state.isLoading = false;
-        state.token = null
+        state.token = null;
+        state.user = {
+            id: '',
+            name: '',
+            email: '',
+            role: '',
+        }
     },
     [RESET_AUTH_STATE] (state) {
         Object.assign(state, getDefaultState())
@@ -103,21 +110,15 @@ const actions = {
     async login({ commit, dispatch, getters}, payload) {
         commit(AUTHENTICATING);
         try {
-            const response = await UserAuthApi.login(payload.username, payload.password);
-            const token = response.data.access_token
-            commit(AUTHENTICATION_SUCCESS, token);
+            const responseLogin = await UserAuthApi.login(payload.username, payload.password);
+            const token = responseLogin.data.access_token
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             localStorage.setItem('access_token', token);
-            dispatch('getUserInfo').then(
-                () => {
-                    if (getters['hasError']) {
-                        console.log(getters['error'])
-                    } else {
-                        localStorage.setItem('user_id', getters['getUser'].id);
-                    }
-                }
-            );
-            return response.data;
+            const responseGetUserInfo = await UserAuthApi.getUserInfo();
+            const user = responseGetUserInfo.data.data;
+            localStorage.setItem('user_id', user.id,);
+            commit(AUTHENTICATION_SUCCESS, token, user);
+            return responseLogin.data;
         } catch (error) {
             commit(AUTHENTICATION_ERROR, error);
             return null;
@@ -141,6 +142,7 @@ const actions = {
             commit(LOGOUT_SUCCESS);
             delete axios.defaults.headers.common['Authorization'];
             localStorage.removeItem("access_token");
+            localStorage.removeItem("user_id");
             return response.data;
         } catch (error) {
             commit(LOGOUT_ERROR, error);

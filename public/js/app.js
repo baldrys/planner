@@ -1938,8 +1938,11 @@ __webpack_require__.r(__webpack_exports__);
     isAuthenticated: function isAuthenticated() {
       return this.$store.getters['auth/isAuthenticated'];
     },
-    userFromStore: function userFromStore() {
+    user: function user() {
       return this.$store.getters['auth/getUser'];
+    },
+    isLoading: function isLoading() {
+      return this.$store.getters['auth/isLoading'];
     }
   },
   mounted: function mounted() {
@@ -1950,10 +1953,6 @@ __webpack_require__.r(__webpack_exports__);
         if (_this.hasError) {
           console.log(_this.error);
         }
-      });
-    } else {
-      this.$router.push({
-        name: "LoginForm"
       });
     }
   },
@@ -39996,7 +39995,7 @@ var render = function() {
               : _vm._e()
           ]),
           _vm._v(" "),
-          _vm.isAuthenticated
+          _vm.isAuthenticated && !_vm.isLoading
             ? _c("ul", { staticClass: "navbar-nav nav-bar-right" }, [
                 _c(
                   "li",
@@ -40020,7 +40019,7 @@ var render = function() {
                         ),
                         _vm._v(" "),
                         _c("span", { staticClass: "align-middle" }, [
-                          _vm._v(_vm._s(_vm.userFromStore.name))
+                          _vm._v(_vm._s(_vm.user.name))
                         ])
                       ]
                     )
@@ -63871,23 +63870,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
-var userId = localStorage.getItem('user_id');
-var ACTIVITIES_URL = "/api/users/".concat(userId, "/activities");
 /* harmony default export */ __webpack_exports__["default"] = ({
+  getUrl: function getUrl() {
+    var userId = localStorage.getItem('user_id');
+    return "/api/users/".concat(userId, "/activities");
+  },
   fetchActivities: function fetchActivities() {
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(ACTIVITIES_URL);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(this.getUrl());
   },
   updateActivity: function updateActivity(activity) {
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch(ACTIVITIES_URL + "/" + activity.id, {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch(this.getUrl() + "/" + activity.id, {
       name: activity.name,
       activity_period: activity.activity_period
     });
   },
   deleteActivity: function deleteActivity(activity) {
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a["delete"](ACTIVITIES_URL + "/" + activity.id);
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a["delete"](this.getUrl() + "/" + activity.id);
   },
   addActivity: function addActivity(activity) {
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(ACTIVITIES_URL, {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(this.getUrl(), {
       name: activity.name,
       activity_period: activity.period
     });
@@ -63908,11 +63909,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
-var userId = localStorage.getItem('user_id');
-var DAY_ACTIVITIES_URL = "/api/users/".concat(userId, "/day-activities");
 /* harmony default export */ __webpack_exports__["default"] = ({
+  getUrl: function getUrl() {
+    var userId = localStorage.getItem('user_id');
+    return "/api/users/".concat(userId, "/day-activities");
+  },
   fetchDayActivities: function fetchDayActivities(dates) {
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(DAY_ACTIVITIES_URL, {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(this.getUrl(), {
       params: {
         start_date: dates.startDate,
         end_date: dates.endDate
@@ -63920,7 +63923,7 @@ var DAY_ACTIVITIES_URL = "/api/users/".concat(userId, "/day-activities");
     });
   },
   updateDayActivity: function updateDayActivity(dayActivity) {
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch(DAY_ACTIVITIES_URL + "/" + dayActivity.id, {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch(this.getUrl() + "/" + dayActivity.id, {
       is_done: dayActivity.isDone
     });
   }
@@ -63939,14 +63942,14 @@ var DAY_ACTIVITIES_URL = "/api/users/".concat(userId, "/day-activities");
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../store */ "./resources/js/store/index.js");
 
-
-var USER_URL = "/api/users";
 /* harmony default export */ __webpack_exports__["default"] = ({
+  getUrl: function getUrl() {
+    var userId = localStorage.getItem('user_id');
+    return "/api/users\"/".concat(userId);
+  },
   updateUser: function updateUser(username, email, password) {
-    var USER = _store__WEBPACK_IMPORTED_MODULE_1__["default"].getters['auth/getUser'];
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch(USER_URL + "/" + USER.id, {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch(this.getUrl(), {
       name: username,
       email: email,
       password: password
@@ -64547,6 +64550,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_users__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/users */ "./resources/js/store/modules/users.js");
 /* harmony import */ var _modules_activities__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/activities */ "./resources/js/store/modules/activities.js");
 /* harmony import */ var _modules_dayActivities__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/dayActivities */ "./resources/js/store/modules/dayActivities.js");
+var _this = undefined;
+
 
 
 
@@ -64554,14 +64559,26 @@ __webpack_require__.r(__webpack_exports__);
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
-/* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
+var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
     auth: _modules_auth__WEBPACK_IMPORTED_MODULE_2__["default"],
     user: _modules_users__WEBPACK_IMPORTED_MODULE_3__["default"],
     activities: _modules_activities__WEBPACK_IMPORTED_MODULE_4__["default"],
     dayActivities: _modules_dayActivities__WEBPACK_IMPORTED_MODULE_5__["default"]
   }
-}));
+});
+store.watch(function (state) {
+  return store.getters['auth/isAuthenticated'];
+}, function (newValue, oldValue) {
+  if (newValue === true) {
+    store.dispatch('auth/getUserInfo').then(function () {
+      if (store.getters['auth/hasError']) {
+        console.log(_this.error);
+      }
+    });
+  }
+});
+/* harmony default export */ __webpack_exports__["default"] = (store);
 
 /***/ }),
 
@@ -64875,10 +64892,11 @@ var getDefaultState = function getDefaultState() {
 var mutations = (_mutations = {}, _defineProperty(_mutations, AUTHENTICATING, function (state) {
   state.isLoading = true;
   state.error = null;
-}), _defineProperty(_mutations, AUTHENTICATION_SUCCESS, function (state, token) {
+}), _defineProperty(_mutations, AUTHENTICATION_SUCCESS, function (state, token, user) {
   state.error = null;
   state.isLoading = false;
   state.token = token;
+  state.user = user;
 }), _defineProperty(_mutations, AUTHENTICATION_ERROR, function (state, error) {
   state.error = error;
   state.isLoading = false;
@@ -64901,6 +64919,12 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, AUTHENTICATING, fu
   state.error = null;
   state.isLoading = false;
   state.token = null;
+  state.user = {
+    id: '',
+    name: '',
+    email: '',
+    role: ''
+  };
 }), _defineProperty(_mutations, RESET_AUTH_STATE, function (state) {
   Object.assign(state, getDefaultState());
 }), _defineProperty(_mutations, FETCHING_USER, function (state) {
@@ -64917,7 +64941,7 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, AUTHENTICATING, fu
 }), _mutations);
 var actions = {
   login: function login(_ref, payload) {
-    var commit, dispatch, getters, response, token;
+    var commit, dispatch, getters, responseLogin, token, responseGetUserInfo, user;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function login$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -64929,32 +64953,32 @@ var actions = {
             return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(_api_UserAuth__WEBPACK_IMPORTED_MODULE_1__["default"].login(payload.username, payload.password));
 
           case 5:
-            response = _context.sent;
-            token = response.data.access_token;
-            commit(AUTHENTICATION_SUCCESS, token);
+            responseLogin = _context.sent;
+            token = responseLogin.data.access_token;
             axios__WEBPACK_IMPORTED_MODULE_2___default.a.defaults.headers.common['Authorization'] = "Bearer ".concat(token);
             localStorage.setItem('access_token', token);
-            dispatch('getUserInfo').then(function () {
-              if (getters['hasError']) {
-                console.log(getters['error']);
-              } else {
-                localStorage.setItem('user_id', getters['getUser'].id);
-              }
-            });
-            return _context.abrupt("return", response.data);
+            _context.next = 11;
+            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(_api_UserAuth__WEBPACK_IMPORTED_MODULE_1__["default"].getUserInfo());
 
-          case 14:
-            _context.prev = 14;
+          case 11:
+            responseGetUserInfo = _context.sent;
+            user = responseGetUserInfo.data.data;
+            localStorage.setItem('user_id', user.id);
+            commit(AUTHENTICATION_SUCCESS, token, user);
+            return _context.abrupt("return", responseLogin.data);
+
+          case 18:
+            _context.prev = 18;
             _context.t0 = _context["catch"](2);
             commit(AUTHENTICATION_ERROR, _context.t0);
             return _context.abrupt("return", null);
 
-          case 18:
+          case 22:
           case "end":
             return _context.stop();
         }
       }
-    }, null, null, [[2, 14]]);
+    }, null, null, [[2, 18]]);
   },
   register: function register(_ref2, payload) {
     var commit, response;
@@ -65003,20 +65027,21 @@ var actions = {
             commit(LOGOUT_SUCCESS);
             delete axios__WEBPACK_IMPORTED_MODULE_2___default.a.defaults.headers.common['Authorization'];
             localStorage.removeItem("access_token");
+            localStorage.removeItem("user_id");
             return _context3.abrupt("return", response.data);
 
-          case 12:
-            _context3.prev = 12;
+          case 13:
+            _context3.prev = 13;
             _context3.t0 = _context3["catch"](2);
             commit(LOGOUT_ERROR, _context3.t0);
             return _context3.abrupt("return", null);
 
-          case 16:
+          case 17:
           case "end":
             return _context3.stop();
         }
       }
-    }, null, null, [[2, 12]]);
+    }, null, null, [[2, 13]]);
   },
   resetAuthState: function resetAuthState(_ref4) {
     var commit = _ref4.commit;

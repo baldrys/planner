@@ -16,7 +16,7 @@ class ActivitiesWithDayActivitiesResourceCollection extends ResourceCollection
     {
         return [
             'activities' => ActivitiesWithDayActivitiesResource::collection($this),
-            'user' => new UserResource($this->first()->userActivity->user),
+            'user' => $this->first() ? new UserResource($this->first()->userActivity->user): [],
         ];
     }
 }
