@@ -49,6 +49,19 @@ export default {
             return this.$store.getters['auth/getUser'];
         } 
     },
+    mounted() {
+        if(this.isAuthenticated){
+            this.$store.dispatch('auth/getUserInfo').then(
+                () => {
+                    if (this.hasError) {
+                        console.log(this.error)
+                    }
+                }
+            );
+        } else {
+            this.$router.push({ name: "LoginForm"});
+        }
+    },
     methods: {
         logout(){
             this.$store.dispatch('auth/logout').then(

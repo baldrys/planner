@@ -1942,17 +1942,32 @@ __webpack_require__.r(__webpack_exports__);
       return this.$store.getters['auth/getUser'];
     }
   },
+  mounted: function mounted() {
+    var _this = this;
+
+    if (this.isAuthenticated) {
+      this.$store.dispatch('auth/getUserInfo').then(function () {
+        if (_this.hasError) {
+          console.log(_this.error);
+        }
+      });
+    } else {
+      this.$router.push({
+        name: "LoginForm"
+      });
+    }
+  },
   methods: {
     logout: function logout() {
-      var _this = this;
+      var _this2 = this;
 
       this.$store.dispatch('auth/logout').then(function () {
-        if (!_this.hasError) {
-          _this.$router.push({
+        if (!_this2.hasError) {
+          _this2.$router.push({
             name: "LoginForm"
           });
         } else {
-          if (!_this.hasError) console.log(_this.error);
+          if (!_this2.hasError) console.log(_this2.error);
         }
       });
     }
@@ -2914,25 +2929,19 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this3 = this;
 
-    if (this.isAuthenticated) {
-      this.$store.dispatch('auth/getUserInfo').then(function () {
-        if (_this3.hasError) {
-          console.log(_this3.error);
-        } else {
-          var userFromStore = _this3.userFromStore;
-          _this3.user = {
-            name: userFromStore.name,
-            email: userFromStore.email,
-            password: '',
-            newPassword: ''
-          };
-        }
-      });
-    } else {
-      this.$router.push({
-        name: "LoginForm"
-      });
-    }
+    this.$store.dispatch('auth/getUserInfo').then(function () {
+      if (_this3.hasError) {
+        console.log(_this3.error);
+      } else {
+        var userFromStore = _this3.userFromStore;
+        _this3.user = {
+          name: userFromStore.name,
+          email: userFromStore.email,
+          password: '',
+          newPassword: ''
+        };
+      }
+    });
   },
   computed: {
     userFromStore: function userFromStore() {
@@ -64928,7 +64937,6 @@ var actions = {
             dispatch('getUserInfo').then(function () {
               if (getters['hasError']) {
                 console.log(getters['error']);
-                console.log('AAHAHAHAHA');
               } else {
                 localStorage.setItem('user_id', getters['getUser'].id);
               }

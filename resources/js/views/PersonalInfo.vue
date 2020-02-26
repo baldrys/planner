@@ -123,26 +123,22 @@
             }
         },
         created() {
-            if(this.isAuthenticated){
-                this.$store.dispatch('auth/getUserInfo').then(
-                    () => {
-                        if (this.hasError) {
-                            console.log(this.error)
-                        } else {
-                            const userFromStore = this.userFromStore;
-                            this.user = {
-                                name: userFromStore.name,
-                                email: userFromStore.email,
-                                password: '',
-                                newPassword: ''
-                            }
-
+            this.$store.dispatch('auth/getUserInfo').then(
+                () => {
+                    if (this.hasError) {
+                        console.log(this.error)
+                    } else {
+                        const userFromStore = this.userFromStore;
+                        this.user = {
+                            name: userFromStore.name,
+                            email: userFromStore.email,
+                            password: '',
+                            newPassword: ''
                         }
+
                     }
-                );
-            } else {
-                this.$router.push({ name: "LoginForm"});
-            }
+                }
+            );
         },
         computed: {
             userFromStore() {
