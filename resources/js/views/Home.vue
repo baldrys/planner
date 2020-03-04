@@ -11,7 +11,7 @@
                     <th scope="col" class="w-50">Статус</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody v-if="dayActivites.day_activities">
                     <tr v-for="(dayActivity, dayActivityId) in dayActivites" :key="dayActivity.id">
                         <th scope="row">{{ parseInt(dayActivityId) + 1 }}</th>
                         <td>{{ dayActivity.name }}</td>

@@ -2219,6 +2219,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2230,7 +2236,8 @@ __webpack_require__.r(__webpack_exports__);
       justDeleted: false,
       activityToAdd: {
         name: '',
-        period: ''
+        period: '',
+        isPaused: ''
       }
     };
   },
@@ -2242,6 +2249,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log(_this.error);
       } else {
         _this.activities = JSON.parse(JSON.stringify(_this.activitiesFromStore));
+        console.log(_this.activities);
       }
     });
   },
@@ -2253,7 +2261,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       return this.activities.map(function (activity, i) {
-        if (_this2.activitiesFromStore[i] && activity.name == _this2.activitiesFromStore[i].name && activity.activity_period == _this2.activitiesFromStore[i].activity_period) return false;else return true;
+        if (_this2.activitiesFromStore[i] && activity.name == _this2.activitiesFromStore[i].name && activity.activity_period == _this2.activitiesFromStore[i].activity_period && activity.is_paused == _this2.activitiesFromStore[i].is_paused) return false;else return true;
       });
     },
     isActivitiesLoading: function isActivitiesLoading() {
@@ -2276,7 +2284,6 @@ __webpack_require__.r(__webpack_exports__);
       this.justEdited = false;
     },
     isActivityChanged: function isActivityChanged(activityId) {
-      console.log('isChanged');
       if (this.activities[activityId] == this.activitiesFromStore[activityId]) return false;
       return true;
     },
@@ -2337,6 +2344,9 @@ __webpack_require__.r(__webpack_exports__);
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
           integer: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["integer"],
           minValue: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minValue"])(0)
+        },
+        is_paused: {
+          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
         }
       }
     },
@@ -40294,6 +40304,14 @@ var render = function() {
                     ? _c("div", { staticClass: "alert alert-danger" }, [
                         _vm._v("Введите имя")
                       ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.activitiesFromStore[activityId].is_paused
+                    ? _c("div", { staticClass: "alert alert-warning" }, [
+                        _vm._v(
+                          "\n                    Активность на паузе\n                  "
+                        )
+                      ])
                     : _vm._e()
                 ]),
                 _vm._v(" "),
@@ -40338,11 +40356,29 @@ var render = function() {
                     : _vm._e()
                 ]),
                 _vm._v(" "),
-                _c("td", [
+                _c("td", { staticClass: "d-flex border-0" }, [
                   _c(
                     "button",
                     {
-                      staticClass: "btn btn-success",
+                      staticClass: "btn btn-light mr-1",
+                      class: { active: !activity.$model.is_paused },
+                      on: {
+                        click: function($event) {
+                          activity.$model.is_paused = !activity.$model.is_paused
+                        }
+                      }
+                    },
+                    [
+                      activity.$model.is_paused
+                        ? _c("span", [_vm._v("Убрать с паузы")])
+                        : _c("span", [_vm._v("Поставить на паузу")])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success mr-1",
                       attrs: {
                         disabled:
                           _vm.isActivityUpdating ||
@@ -40368,7 +40404,7 @@ var render = function() {
                           })
                         : _vm._e(),
                       _vm._v(
-                        "\n                      Изменить\n                    "
+                        "\n                        Изменить\n                    "
                       )
                     ]
                   ),
@@ -40393,7 +40429,7 @@ var render = function() {
                           })
                         : _vm._e(),
                       _vm._v(
-                        "\n                      Удалить\n                  "
+                        "\n                        Удалить\n                  "
                       )
                     ]
                   )
@@ -40776,109 +40812,114 @@ var render = function() {
         : _c("table", { staticClass: "table" }, [
             _vm._m(0),
             _vm._v(" "),
-            _c(
-              "tbody",
-              _vm._l(_vm.dayActivites, function(dayActivity, dayActivityId) {
-                return _c("tr", { key: dayActivity.id }, [
-                  _c("th", { attrs: { scope: "row" } }, [
-                    _vm._v(_vm._s(parseInt(dayActivityId) + 1))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(dayActivity.name))]),
-                  _vm._v(" "),
-                  dayActivity.day_activities[0].is_free_day
-                    ? _c("td", { staticClass: "d-flex" }, [
-                        _c(
-                          "div",
-                          { staticClass: "mb-0 mr-1 alert alert-warning" },
-                          [_vm._v("Выходной")]
-                        )
-                      ])
-                    : !dayActivity.day_activities[0].is_done
-                    ? _c("td", { staticClass: "d-flex" }, [
-                        _c(
-                          "div",
-                          { staticClass: "mb-0 mr-1 alert alert-danger" },
-                          [_vm._v("Не сделано")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-success btn-sm",
-                            on: {
-                              click: function($event) {
-                                return _vm.activityDone(
-                                  dayActivity.day_activities[0].id
-                                )
-                              }
-                            }
-                          },
-                          [
-                            _vm.isDayActivityUpdating &&
-                            _vm.dayActivityActed.id ==
-                              dayActivity.day_activities[0].id
-                              ? _c("span", {
-                                  staticClass:
-                                    "spinner-border spinner-border-sm",
-                                  attrs: {
-                                    role: "status",
-                                    "aria-hidden": "true"
+            _vm.dayActivites.day_activities
+              ? _c(
+                  "tbody",
+                  _vm._l(_vm.dayActivites, function(
+                    dayActivity,
+                    dayActivityId
+                  ) {
+                    return _c("tr", { key: dayActivity.id }, [
+                      _c("th", { attrs: { scope: "row" } }, [
+                        _vm._v(_vm._s(parseInt(dayActivityId) + 1))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(dayActivity.name))]),
+                      _vm._v(" "),
+                      dayActivity.day_activities[0].is_free_day
+                        ? _c("td", { staticClass: "d-flex" }, [
+                            _c(
+                              "div",
+                              { staticClass: "mb-0 mr-1 alert alert-warning" },
+                              [_vm._v("Выходной")]
+                            )
+                          ])
+                        : !dayActivity.day_activities[0].is_done
+                        ? _c("td", { staticClass: "d-flex" }, [
+                            _c(
+                              "div",
+                              { staticClass: "mb-0 mr-1 alert alert-danger" },
+                              [_vm._v("Не сделано")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-success btn-sm",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.activityDone(
+                                      dayActivity.day_activities[0].id
+                                    )
                                   }
-                                })
-                              : _vm._e(),
-                            _vm._v(
-                              "\n                            Готово!\n                        "
-                            )
-                          ]
-                        )
-                      ])
-                    : _c("td", { staticClass: "d-flex" }, [
-                        _c(
-                          "div",
-                          { staticClass: "mb-0 mr-1 alert alert-success" },
-                          [
-                            _vm._v(
-                              "\n                        Уже сделано!\n                        "
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-danger btn-sm",
-                            on: {
-                              click: function($event) {
-                                return _vm.activityUndo(
+                                }
+                              },
+                              [
+                                _vm.isDayActivityUpdating &&
+                                _vm.dayActivityActed.id ==
                                   dayActivity.day_activities[0].id
+                                  ? _c("span", {
+                                      staticClass:
+                                        "spinner-border spinner-border-sm",
+                                      attrs: {
+                                        role: "status",
+                                        "aria-hidden": "true"
+                                      }
+                                    })
+                                  : _vm._e(),
+                                _vm._v(
+                                  "\n                            Готово!\n                        "
                                 )
-                              }
-                            }
-                          },
-                          [
-                            _vm.isDayActivityUpdating &&
-                            _vm.dayActivityActed.id ==
-                              dayActivity.day_activities[0].id
-                              ? _c("span", {
-                                  staticClass:
-                                    "spinner-border spinner-border-sm",
-                                  attrs: {
-                                    role: "status",
-                                    "aria-hidden": "true"
-                                  }
-                                })
-                              : _vm._e(),
-                            _vm._v(
-                              "\n                            Отменить\n                        "
+                              ]
                             )
-                          ]
-                        )
-                      ])
-                ])
-              }),
-              0
-            )
+                          ])
+                        : _c("td", { staticClass: "d-flex" }, [
+                            _c(
+                              "div",
+                              { staticClass: "mb-0 mr-1 alert alert-success" },
+                              [
+                                _vm._v(
+                                  "\n                        Уже сделано!\n                        "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger btn-sm",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.activityUndo(
+                                      dayActivity.day_activities[0].id
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _vm.isDayActivityUpdating &&
+                                _vm.dayActivityActed.id ==
+                                  dayActivity.day_activities[0].id
+                                  ? _c("span", {
+                                      staticClass:
+                                        "spinner-border spinner-border-sm",
+                                      attrs: {
+                                        role: "status",
+                                        "aria-hidden": "true"
+                                      }
+                                    })
+                                  : _vm._e(),
+                                _vm._v(
+                                  "\n                            Отменить\n                        "
+                                )
+                              ]
+                            )
+                          ])
+                    ])
+                  }),
+                  0
+                )
+              : _vm._e()
           ])
     ])
   ])

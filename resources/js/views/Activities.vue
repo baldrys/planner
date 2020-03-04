@@ -18,23 +18,29 @@
                   <td>
                     <input type="text" class="form-control" v-model="activity.name.$model">
                     <div class="alert alert-danger" v-if="!activity.name.required">Введите имя</div>
+                    <div v-if="activitiesFromStore[activityId].is_paused" class="alert alert-warning">
+                      Активность на паузе
+                    </div>
                   </td>
                   <td>
                     <input type="text" class="form-control" v-model="activity.activity_period.$model">
                     <div class="alert alert-danger" v-if="!activity.activity_period.required">Введите период</div>  
                     <div class="alert alert-danger" v-if="!activity.activity_period.integer || !activity.activity_period.minValue">Период целое число > 0</div>  
-
                   </td>
-                  <td>
+                  <td class="d-flex border-0">
+                    <button  @click="activity.$model.is_paused = ! activity.$model.is_paused" class="btn btn-light mr-1" v-bind:class="{ active: !activity.$model.is_paused }">
+                      <span v-if="activity.$model.is_paused">Убрать с паузы</span>
+                      <span v-else>Поставить на паузу</span>
+                    </button>
                     <button @click="updateActivity(activity.$model)" :disabled="
                     isActivityUpdating || !activitiesChanged[activityId] || !activity.name.required || !activity.activity_period.required || !activity.activity_period.integer || !activity.activity_period.minValue
-                    " type="button" class="btn btn-success">
+                    " type="button" class="btn btn-success mr-1">
                         <span v-if="isActivityUpdating && activityActed.id == activity.$model.id" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Изменить
+                          Изменить
                       </button>
                     <button @click="deleteActivity(activity.$model)" type="button" class="btn btn-danger">
                         <span v-if="isActivityDeleting && activityActed.id == activity.$model.id" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Удалить
+                          Удалить
                     </button>
                   </td>
                 </tr>
@@ -82,7 +88,8 @@ export default {
       justDeleted: false,
       activityToAdd:{
         name: '',
-        period: ''
+        period: '',
+        isPaused: ''
       }
     }
   },
@@ -93,6 +100,7 @@ export default {
                 console.log(this.error)
             } else {
               this.activities = JSON.parse(JSON.stringify(this.activitiesFromStore));
+              console.log(this.activities);
             }
         }
     );
@@ -103,7 +111,7 @@ export default {
     },
     activitiesChanged() {
       return this.activities.map((activity, i) => {
-          if(this.activitiesFromStore[i] &&  activity.name == this.activitiesFromStore[i].name && activity.activity_period == this.activitiesFromStore[i].activity_period)
+          if(this.activitiesFromStore[i] &&  activity.name == this.activitiesFromStore[i].name && activity.activity_period == this.activitiesFromStore[i].activity_period && activity.is_paused == this.activitiesFromStore[i].is_paused)
             return false;
           else
             return true  
@@ -129,7 +137,6 @@ export default {
       this.justEdited = false;
     },
     isActivityChanged(activityId) {
-      console.log('isChanged')
       if(this.activities[activityId] == this.activitiesFromStore[activityId])
         return false
       return true
@@ -190,7 +197,10 @@ export default {
           required,
           integer,
           minValue: minValue(0)
-        }
+        },
+        is_paused: {
+          required,
+        },
       }
     },
     activityToAdd:{

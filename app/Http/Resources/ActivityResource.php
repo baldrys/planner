@@ -18,6 +18,7 @@ class ActivityResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'activity_period' => (int)$this->userActivity->activity_period,
+            'is_paused' => (bool)$this->is_paused,
         ];
     }
 }

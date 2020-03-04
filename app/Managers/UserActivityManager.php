@@ -21,14 +21,14 @@ class UserActivityManager{
 
     public function updateActivity(EditActivityRequest $request, Activity $activity) {
 
-        $activity->update(['name' => $request->name]);
+        $activity->update([
+            'name' => $request->name,
+            'is_paused' => $request->is_paused ? $request->is_paused:0,
+            ]);
         $activity->userActivity->update([
             'activity_period'=>$request->activity_period
         ]);
 
         return $activity;
     }
-
-    
-    
 }

@@ -22,6 +22,7 @@ class DayActivityResource extends JsonResource
             'is_done' => (bool)$this->is_done,
             'is_free_day' => (bool)$this->is_free_day,
             'date' => $this->date->format('Y-m-d'),
+            'is_paused' => (bool)$this->is_paused,
         ];
     }
 }

@@ -24,5 +24,6 @@ class EloquentObserverServiceProvider extends ServiceProvider
     public function boot()
     {
         \App\DayActivity::observe(\App\Observers\DayActivityObserver::class);
+        \App\Activity::observe(\App\Observers\ActivityObserver::class);
     }
 }
