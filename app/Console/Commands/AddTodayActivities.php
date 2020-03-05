@@ -21,7 +21,7 @@ class AddTodayActivities extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Команда для добавления сегодняшних активностей';
 
     /**
      * Create a new command instance.

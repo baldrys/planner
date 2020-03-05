@@ -26,21 +26,7 @@ class ActivityObserver
      */
     public function updated(Activity $activity)
     {
-        $today = Carbon::parse(DateTime::formatDate(time()))
-            ->startOfDay()
-            ->toDateTimeString();
-        $todayActivity = $activity->userActivity
-            ->dayActivities
-            ->where('date', $today)
-            ->first();
-        $updatedParams = [
-            'is_paused' => $activity->is_paused,
-        ];    
 
-        if(!$activity->is_paused){
-            array_merge($updatedParams, ['is_free_day' => $activity->isTodayFreeDay()]);
-        }
-        $todayActivity->update($updatedParams);
     }
 
     /**

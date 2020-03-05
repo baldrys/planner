@@ -2583,6 +2583,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -40812,7 +40813,7 @@ var render = function() {
         : _c("table", { staticClass: "table" }, [
             _vm._m(0),
             _vm._v(" "),
-            _vm.dayActivites.day_activities
+            _vm.dayActivites.length > 0
               ? _c(
                   "tbody",
                   _vm._l(_vm.dayActivites, function(
@@ -40826,7 +40827,15 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(dayActivity.name))]),
                       _vm._v(" "),
-                      dayActivity.day_activities[0].is_free_day
+                      dayActivity.day_activities[0].is_paused
+                        ? _c("td", { staticClass: "d-flex" }, [
+                            _c(
+                              "div",
+                              { staticClass: "mb-0 mr-1 alert alert-info" },
+                              [_vm._v("На паузе")]
+                            )
+                          ])
+                        : dayActivity.day_activities[0].is_free_day
                         ? _c("td", { staticClass: "d-flex" }, [
                             _c(
                               "div",
@@ -63919,7 +63928,8 @@ __webpack_require__.r(__webpack_exports__);
   updateActivity: function updateActivity(activity) {
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch(this.getUrl() + "/" + activity.id, {
       name: activity.name,
-      activity_period: activity.activity_period
+      activity_period: activity.activity_period,
+      is_paused: activity.is_paused
     });
   },
   deleteActivity: function deleteActivity(activity) {

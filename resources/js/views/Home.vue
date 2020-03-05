@@ -11,11 +11,12 @@
                     <th scope="col" class="w-50">Статус</th>
                     </tr>
                 </thead>
-                <tbody v-if="dayActivites.day_activities">
+                <tbody v-if="dayActivites.length > 0">
                     <tr v-for="(dayActivity, dayActivityId) in dayActivites" :key="dayActivity.id">
                         <th scope="row">{{ parseInt(dayActivityId) + 1 }}</th>
                         <td>{{ dayActivity.name }}</td>
-                        <td v-if="dayActivity.day_activities[0].is_free_day" class="d-flex"><div class="mb-0 mr-1 alert alert-warning">Выходной</div></td>
+                        <td v-if="dayActivity.day_activities[0].is_paused" class="d-flex"><div class="mb-0 mr-1 alert alert-info">На паузе</div></td>
+                        <td v-else-if="dayActivity.day_activities[0].is_free_day" class="d-flex"><div class="mb-0 mr-1 alert alert-warning">Выходной</div></td>
                         <td v-else-if="!dayActivity.day_activities[0].is_done" class="d-flex">
                             <div class="mb-0 mr-1 alert alert-danger">Не сделано</div>
                             <button @click="activityDone(dayActivity.day_activities[0].id)" class="btn btn-success btn-sm">

@@ -12,7 +12,7 @@ export default {
         return axios.get( this.getUrl());
     },
     updateActivity(activity) {
-        return axios.patch( this.getUrl() + "/" + activity.id, {name: activity.name, activity_period:activity.activity_period});
+        return axios.patch( this.getUrl() + "/" + activity.id, {name: activity.name, activity_period:activity.activity_period, is_paused: activity.is_paused});
     },
     deleteActivity(activity) {
         return axios.delete( this.getUrl() + "/" + activity.id);
